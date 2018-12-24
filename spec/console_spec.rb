@@ -1,13 +1,41 @@
 RSpec.describe Console do
+let (:console) {described_class.new()}
+context "when gem run user see greeting message" do
+  specify { expect { Console.new }.to output(print I18n.t('greeting')).to_stdout }
+end
+context "when an user input is valid _POSITIVE" do
+    it "if user want to continue  and press `y`" do
+    allow(console).to receive(:choice).with(console.question{}).and_return(Console::MENU[:yes])
+    expect(console).to receive(:choose_the_command).once
+    console.choose_the_command
+    end
+    it "if user want to view rules  and press `rules`"do
+    allow(console).to receive(:choice).with(console.question{}).and_return(Console::MENU[:game_rules])
+    expect(console).to receive(:choose_the_command).once
+    console.rules
+    end
+    it "if user want to view statistics and press `stats`"do
+    allow(console).to receive(:choice).with(console.question{}).and_return(Console::MENU[:stats])
+    expect(console).to receive(:choose_the_command).once
+    console.stats
+    end
+    it "if user want to start and press `start`" do
+    allow(console).to receive(:choice).with(console.question{}).and_return(Console::MENU[:game_start])
+    expect(console).to receive(:choose_the_command).once
+    console.start
+    end
 
-  context "when an user does key entry.positive" do
-  it "when key entry is MENU[:yes]"
-  it "when key entry is MENU[:game_rules]"
-  it "when key entry is MENU[:stats]"
-  it "when key entry is MENU[:game_start]"
-  it "when key entry is MENU[:exit]"
+    it "if user want to exit and press `exit`" do
+    allow(console).to receive(:choice).with(console.question{}).and_return(Console::MENU[:exit])
+    expect(console).to receive(:choose_the_command).once
+    console.goodbye
+    end
   end
-  context "when an user does key entry.negative" do
-  it "when key entry is not anythin of a menu item"
+
+  context "if an user input is wrong _NEGATIVE" do
+    it "check messge" do
+    end
+    it "check a call back the start-menu" do
+    end
   end
 end

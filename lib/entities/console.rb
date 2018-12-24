@@ -21,16 +21,12 @@ class Console
   include Validation
 
   def initialize(send_to_console = 'greeting')
-    print I18n.t(send_to_console).colorize(:light_blue)
+    print I18n.t(send_to_console)
   end
 
   def question
-    print yield.colorize(:light_green)
+    print yield
     gets.chomp
-  end
-
-  def what_next?
-    question { '' }
   end
 
   def answer_for_user(answer)
@@ -67,12 +63,12 @@ class Console
 
   def rules
     puts I18n.t(MENU[:game_rules]).colorize(:light_cyan)
-    choice(what_next?)
+    choice(question{})
   end
 
   def stats
     puts load_settings(FILE_NAME_ST)
-    choice(what_next?)
+    choice(question {})
   end
 
   def name_call
@@ -115,4 +111,5 @@ class Console
     start if question { I18n.t(MENU[:restart?]) } == MENU[:yes]
     goodbye
   end
+
 end
