@@ -1,5 +1,4 @@
 module Validation
-
   def validate_string(object)
     check = begin
                 Integer(object)
