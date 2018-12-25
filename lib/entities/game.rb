@@ -3,8 +3,8 @@ DIGIT = 4
 MESSAGE_GU = { "attempt": 'user_answer',
                "nil": 'nil',
                "win": 'win', "failure": 'failure' }.freeze
-PLUS = '+'
-MINUS = '-'
+PLUS = '+'.freeze
+MINUS = '-'.freeze
 
 class Game
   attr_reader :difficulty, :secret_code

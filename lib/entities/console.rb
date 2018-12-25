@@ -1,5 +1,6 @@
-FILE_NAME_ST = '../stat.yml'
+FILE_NAME_ST = '../stat.yml'.freeze
 NAME_RANGE = (3..20).freeze
+LEVEL_DIF = 3
 DIFF = { "easy": { "name": 'Easy',
                    "difficulty": { "hints": 2, "attempts": 15 } },
          "medium": { "name": 'Medium',
@@ -63,7 +64,7 @@ class Console
 
   def rules
     puts I18n.t(MENU[:game_rules]).colorize(:light_cyan)
-    choice(question{})
+    choice(question {})
   end
 
   def stats
@@ -97,9 +98,15 @@ class Console
     end
   end
 
+  def name
+    validate_name?(name_call).capitalize
+  end
+
+  def difficulty
+    difficulty_registration(choose_the_difficulty)
+  end
+
   def start
-    name = validate_name?(name_call).capitalize
-    difficulty = difficulty_registration(choose_the_difficulty)
     Console_game.new(name, difficulty).game_progress
   end
 
@@ -111,5 +118,4 @@ class Console
     start if question { I18n.t(MENU[:restart?]) } == MENU[:yes]
     goodbye
   end
-
 end

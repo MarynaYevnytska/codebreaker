@@ -45,7 +45,7 @@ class Console_game
 
   def console_input
     input_handle(@messages.question { I18n.t(USER_ANSWER[:attempt]) },
-                  @current_hint)
+                 @current_hint)
   end
 
   def input_validate?(console_response)
@@ -55,22 +55,22 @@ class Console_game
     console_response
   end
 
-  def input_handle(console_response, current_hint)
+  def input_handle(console_response, _current_hint)
     case console_response
     when 'hint' then check_hint(@current_hint)
     when 'exit' then @messages.goodbye
-      else
+    else
       input_validate?(console_response)
       end
     end
 
-    def check_hint(current_hint)
-      puts I18n.t(USER_ANSWER[:no_hints]) if @current_hint.zero?
-      unless @current_hint.zero?
+  def check_hint(current_hint)
+    puts I18n.t(USER_ANSWER[:no_hints]) if @current_hint.zero?
+    unless @current_hint.zero?
       puts "you has #{current_hint} hint"
-      @current_hint-=1
+      @current_hint -= 1
       @messages.answer_for_user(@game.view_hint)
       console_input
-    end
   end
+end
 end

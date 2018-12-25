@@ -1,4 +1,4 @@
-FILE_NAME_SORT = '../sorting.yml'
+FILE_NAME_SORT = '../sorting.yml'.freeze
 
 module Storage
   def save(object, file_path)

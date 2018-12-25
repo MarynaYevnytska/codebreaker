@@ -1,11 +1,4 @@
 module Validation
-  def validate_emptiness(object)
-    'Value is empty' if object.to_s.empty?
-  end
-
-  def validate_class(object, klass)
-    'Wrong class!' unless object.is_a? klass
-  end
 
   def validate_string(object)
     check = begin
