@@ -1,7 +1,7 @@
-MIN = 'a' * Console::NAME_RANGE.first # 3
-MAX = 'a' * Console::NAME_RANGE.last # 20
-MIN_DOWN = 'a' * (Console::NAME_RANGE.first - 1) # 2
-MAX_UP = 'a' * (Console::NAME_RANGE.last + 1) # 21
+MIN = 'a' * Console::NAME_RANGE.first # 3a
+MAX = 'a' * Console::NAME_RANGE.last # 20a
+MIN_DOWN = 'a' * (Console::NAME_RANGE.first - 1) # 19a
+MAX_UP = 'a' * (Console::NAME_RANGE.last + 1) # 21a
 NUMBER = ('1' * Game::DIGIT)
 NUMBER_UP = ('1' * (Game::DIGIT + 1))
 
@@ -59,10 +59,7 @@ RSpec.describe Validation do
     end
   end
   #  context "check an user input of secret code" do
-  #     before (:each) do
-  #       NUMBER = ("1" * Game::DIGIT)
-  #       NUMBER_UP = ("1" * (Game::DIGIT+1))
-  #     end
+
   #
   #     it "when an user input of secret code is valid POSITIVE" do
   #     result=dummy_class.errors_array_guess(NUMBER, Game::DIGIT)

@@ -22,11 +22,9 @@ class Game
     plus_minus_factoring(user_input) unless user_input.chars == @secret_code
   end
 
-  def get_hint(current_hint)
-    @current_hint = current_hint
+  def get_hint
     remainder = @hint_clone_scode.pop(@hint_clone_scode.length - 1)
     hint = (@hint_clone_scode - remainder)
-    @current_hint -= 1
     @hint_clone_scode = remainder
     hint[0].to_s
   end
@@ -34,7 +32,7 @@ class Game
   private
 
   def create_secret_code
-     Array.new(DIGIT).map! { |_number| rand(NUM_RANGE).to_s }
+    Array.new(DIGIT).map! { |_number| rand(NUM_RANGE).to_s }
   end
 
   def plus_minus_factoring(user_input)

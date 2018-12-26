@@ -7,7 +7,7 @@ class Console_game
   include Validation
 
   attr_reader :name, :difficulty
-  attr_accessor :messages, :game, :current_hint, :current_attempt
+  attr_accessor :messages, :game, :current_hint, :current_attempt, :game_status
   def initialize(name, difficulty)
     @name = name
     @difficulty = difficulty
@@ -19,19 +19,20 @@ class Console_game
     @messages.question { I18n.t(USER_ANSWER[:attempt]) }
   end
 
-  def user_play_move
+  def user_game_move
     input_handle(user_input, @current_hint)
   end
 
   def guess
-    @game_status = @game.compare(user_play_move)
+    @game_status = @game.compare(user_game_move)
     @current_hint = @game.current_hint
   end
 
   def game_progress
     @current_hint = @difficulty[:difficulty][:hints].to_i
     @current_attempt = 1
-    while (1..@difficulty[:difficulty][:attempts].to_i).cover?(@current_attempt)
+    range = 1..@difficulty[:difficulty][:attempts].to_i
+    while range.cover?(@current_attempt)
       guess
       break if @game_status == 'win'
 
@@ -57,24 +58,24 @@ class Console_game
     input
   end
 
-  def input_handle(user_input, _current_hint)
+  def input_handle(user_input, current_hint)
     case user_input
-    when 'hint' then check_hint(@current_hint)
+    when 'hint' then check_hint(current_hint)
     when 'exit' then @messages.goodbye
     else
       input_validate?(user_input)
       end
     end
 
-  def check_hint(_current_hint)
-    puts I18n.t(USER_ANSWER[:no_hints]) if @current_hint.zero?
-    view_hint(@current_hint) unless @current_hint.zero?
+  def check_hint(current_hint)
+    puts I18n.t(USER_ANSWER[:no_hints]) if current_hint.zero?
+    view_hint(current_hint) unless current_hint.zero?
   end
 
   def view_hint(current_hint)
-    @current_hint -= 1
+    current_hint -= 1
+    @current_hint = current_hint
     @messages.answer_for_user(@game.get_hint)
-    puts "You've still got #{current_hint} hint"
-    user_play_move
+    user_game_move
   end
 end
