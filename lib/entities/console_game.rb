@@ -32,7 +32,7 @@ class Console_game
     @current_attempt = 1
     range = 1..@difficulty[:difficulty][:attempts].to_i
     while range.cover?(@current_attempt)
-        @game_status = guess_result
+      @game_status = guess_result
       break if @game_status == 'win'
 
       @messages.answer_for_user(@game_status)

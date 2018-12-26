@@ -1,8 +1,8 @@
 HINT = 1 # Console::DIFF[:medium][:difficulty][:hints]
-NUMBER = "1" * Game::DIGIT #1111
+NUMBER = '1' * Game::DIGIT # 1111
 ATTEMPTS = (1..Console::DIFF[:medium][:difficulty][:attempts]).freeze
 ZERO = 0
-WIN='win'
+WIN = 'win'.freeze
 RSpec.describe Console_game do
   let(:console_game) { described_class.new('Sergey', Console::DIFF[:medium]) }
   context '#initialize' do
@@ -97,7 +97,7 @@ RSpec.describe Console_game do
       console_game.user_game_move
     end
   end
-  context "when the user attempt is `number`" do
+  context 'when the user attempt is `number`' do
     before (:each) do
       allow(console_game).to receive(:game_progress)
       allow(console_game).to receive(:while).and_call_original
@@ -120,10 +120,10 @@ RSpec.describe Console_game do
     it 'when the user `number` was handled and attempt was used', positive: true do
       allow(console_game).to receive(:input_handle).with(NUMBER, HINT).and_call_original
       allow(@game).to receive(:compare).with(NUMBER).and_return(NUMBER)
-      expect(console_game.current_attempt).to eq(ATTEMPTS.last-1)
+      expect(console_game.current_attempt).to eq(ATTEMPTS.last - 1)
     end
     it 'when the user `number` was handled and the game status is win', positive: true do
-      statistics=double("statistic game")
+      statistics = double('statistic game')
       allow(console_game).to receive(:input_handle).with(NUMBER, HINT).and_call_original
       allow(@game).to receive(:compare).with(NUMBER).and_return(WIN)
       expect(console_game.messages).to receive(:game_over).once
@@ -140,11 +140,11 @@ RSpec.describe Console_game do
     after(:each) do
       console_game
     end
-      it 'when the user input is `exit`', positive: true do
+    it 'when the user input is `exit`', positive: true do
       allow(console_game).to receive(:input_handle).with('exit', HINT).and_call_original
       expect(console_game.messages).to receive(:goodbye).once
       console_game.messages.goodbye
-      end
+    end
   end
   context 'when the user input is NOT `exit` && `hint`' do
     before (:each) do
@@ -156,10 +156,10 @@ RSpec.describe Console_game do
     after(:each) do
       console_game
     end
-      it 'when the user input is NOT `exit` &&  `hint`', positive: true do
+    it 'when the user input is NOT `exit` &&  `hint`', positive: true do
       allow(console_game).to receive(:input_handle).with(NUMBER, HINT).and_call_original
       expect(console_game).to receive(:input_validate?).once
       console_game.input_validate?(NUMBER)
-      end
+    end
   end
 end

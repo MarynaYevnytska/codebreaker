@@ -28,7 +28,7 @@ class Game
     hint[0].to_s
   end
 
-  #private
+  # private
 
   def create_secret_code
     Array.new(DIGIT).map! { |_number| rand(NUM_RANGE).to_s }
