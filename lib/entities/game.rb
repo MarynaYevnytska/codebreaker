@@ -40,7 +40,7 @@ class Game
     user_input.chars.each_with_index do |val_user, ind_user|
       @secret_code.each_with_index do |val_sec, ind_sec|
         answer_plus.push(PLUS) if val_sec == val_user && ind_user == ind_sec
-        answer_minus[val_user] = MINUS if val_sec == val_user && ind_user != ind_sec
+        answer_minus[val_user] = MINUS if val_sec == val_user && ind_sec != ind_user
       end
     end
     answer_plus.push(answer_minus.values).join

@@ -2,7 +2,7 @@
 
 MESSAGE_FOR_USER = { "start_game": 'guess', "failure": 'failure' }.freeze
 USER_ANSWER = { "attempt": 'user_answer', "no_hints": 'no_hints' }.freeze
-
+ZERO = 0
 class Console_game
   include Validation
 
@@ -53,22 +53,27 @@ class Console_game
   end
 
   def input_validate?(input)
-    user_input until errors_array_guess(user_input, (DIGIT..DIGIT))
+    input = user_input until errors_array_guess(input, (DIGIT..DIGIT))
     input
   end
 
-  def input_handle(user_input, current_hint)
-    case user_input
+  def input_handle(console_response, current_hint)
+    case console_response
     when 'hint' then check_hint(current_hint)
     when 'exit' then @messages.goodbye
     else
-      input_validate?(user_input)
+      input_validate?(console_response)
       end
     end
 
   def check_hint(current_hint)
-    puts I18n.t(USER_ANSWER[:no_hints]) if current_hint.zero?
-    view_hint(current_hint) unless current_hint.zero?
+    case current_hint
+    when ZERO
+      puts I18n.t(USER_ANSWER[:no_hints])
+      input_handle(user_input, current_hint)
+    when 1..@difficulty[:difficulty][:hints].to_i
+      view_hint(current_hint)
+     end
   end
 
   def view_hint(current_hint)

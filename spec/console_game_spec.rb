@@ -1,10 +1,10 @@
-HINT = 1 # Console::DIFF[:medium][:difficulty][:hints]
+HINT = Console::DIFF[:easy][:difficulty][:hints]
 NUMBER = '1' * Game::DIGIT # 1111
-ATTEMPTS = (1..Console::DIFF[:medium][:difficulty][:attempts]).freeze
+ATTEMPTS = (1..Console::DIFF[:easy][:difficulty][:attempts]).freeze
 ZERO = 0
 WIN = 'win'.freeze
 RSpec.describe Console_game do
-  let(:console_game) { described_class.new('Sergey', Console::DIFF[:medium]) }
+  let(:console_game) { described_class.new('Sergey', Console::DIFF[:easy]) }
   context '#initialize' do
     before(:each) do
       @name = console_game.name
