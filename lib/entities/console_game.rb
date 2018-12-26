@@ -23,9 +23,8 @@ class Console_game
     input_handle(user_input, @current_hint)
   end
 
-  def guess
-    @game_status = @game.compare(user_game_move)
-    @current_hint = @game.current_hint
+  def guess_result
+    @game.compare(user_game_move)
   end
 
   def game_progress
@@ -33,7 +32,7 @@ class Console_game
     @current_attempt = 1
     range = 1..@difficulty[:difficulty][:attempts].to_i
     while range.cover?(@current_attempt)
-      guess
+        @game_status = guess_result
       break if @game_status == 'win'
 
       @messages.answer_for_user(@game_status)

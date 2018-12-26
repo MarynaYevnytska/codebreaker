@@ -8,11 +8,10 @@ MINUS = '-'.freeze
 
 class Game
   attr_reader :difficulty, :secret_code
-  attr_accessor :hints_total, :hint_clone_scode, :current_hint
+  attr_accessor :hint_clone_scode
 
   def initialize(difficulty)
     @difficulty = difficulty
-    @hints_total = difficulty[:difficulty][:hints].to_i
     @secret_code = create_secret_code
     @hint_clone_scode = @secret_code.shuffle
   end
@@ -24,12 +23,12 @@ class Game
 
   def get_hint
     remainder = @hint_clone_scode.pop(@hint_clone_scode.length - 1)
-    hint = (@hint_clone_scode - remainder)
+    hint = @hint_clone_scode - remainder
     @hint_clone_scode = remainder
     hint[0].to_s
   end
 
-  private
+  #private
 
   def create_secret_code
     Array.new(DIGIT).map! { |_number| rand(NUM_RANGE).to_s }
