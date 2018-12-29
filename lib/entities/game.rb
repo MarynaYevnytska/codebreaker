@@ -17,11 +17,14 @@ class Game
   end
 
   def compare(user_input)
-    MESSAGE_GU[:win] if user_input.chars == @secret_code
-    plus_minus_factoring(user_input) unless user_input.chars == @secret_code
+    if user_input.chars == @secret_code
+      MESSAGE_GU[:win]
+    else
+      plus_minus_factoring(user_input)
+    end
   end
 
-  def get_hint
+  def hint
     remainder = @hint_clone_scode.pop(@hint_clone_scode.length - 1)
     hint = @hint_clone_scode - remainder
     @hint_clone_scode = remainder

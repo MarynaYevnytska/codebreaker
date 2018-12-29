@@ -1,6 +1,6 @@
 FILE_NAME_ST = '../stat.yml'.freeze
 NAME_RANGE = (3..20).freeze
-LEVEL_DIF = 3
+
 DIFF = { "easy": { "name": 'Easy',
                    "difficulty": { "hints": 2, "attempts": 15 } },
          "medium": { "name": 'Medium',
@@ -19,7 +19,7 @@ MENU = { "choose_the_command": 'choose_the_command',
 
 class Console
   include Storage
-  include Validation
+  include Validate
 
   def initialize(send_to_console = 'greeting')
     print I18n.t(send_to_console)
@@ -110,12 +110,22 @@ class Console
     Console_game.new(name, difficulty).game_progress
   end
 
-  def game_over(s_code, game_statistics, game_status = 'failure')
-    puts "Secret code is #{s_code.join}".colorize(:yellow)
-    puts I18n.t(MENU[:win]).colorize(:red) if game_status == 'win'
-    puts I18n.t(MENU[:failure]).colorize(:grey) if game_status == 'failure'
+  def save?
     save(game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
+  end
+
+  def start?
     start if question { I18n.t(MENU[:restart?]) } == MENU[:yes]
+  end
+
+  def game_over(s_code, _game_statistics, game_status = 'failure')
+    puts "Secret code is #{s_code.join}".colorize(:yellow)
+    case game_status
+    when 'win' then puts I18n.t(MENU[:win]).colorize(:red)
+    when 'failure' then puts I18n.t(MENU[:failure]).colorize(:grey)
+    end
+    save?
+    start?
     goodbye
   end
 end

@@ -1,81 +1,82 @@
 RSpec.describe Console do
   let (:console) { described_class.new(nil) }
+  let (:easy) { console.difficulty_registration('easy') }
+  let (:medium) { console.difficulty_registration('medium') }
+  let (:hell) { console.difficulty_registration('hell') }
+  # let (:wrong) { console.difficulty_registration('smt') }
 
   context 'when gem run user see greeting message' do
-    specify { expect { Console.new }.to output(print(I18n.t('greeting'))).to_stdout }
+    specify { expect { described_class.new }.to output(print(I18n.t('greeting'))).to_stdout }
   end
-  context 'when an user input is valid _POSITIVE' do
-    it 'if user want to continue  and press `y`' do
+
+  context 'when an user input is valid' do
+    it 'when user want to continue  and press `y`', positive: true do
       allow(console).to receive(:choice).with(console.question {}).and_return(Console::MENU[:yes])
       expect(console).to receive(:choose_the_command).once
       console.choose_the_command
     end
-    it 'if user want to view rules  and press `rules`' do
+    it 'when user want to view rules  and press `rules`', positive: true do
       allow(console).to receive(:choice).with(console.question {}).and_return(Console::MENU[:game_rules])
       expect(console).to receive(:rules).once
       console.rules
     end
-    it 'if user want to view statistics and press `stats`' do
+    it 'when user want to view statistics and press `stats`', positive: true do
       allow(console).to receive(:choice).with(console.question {}).and_return(Console::MENU[:stats])
       expect(console).to receive(:stats).once
       console.stats
     end
-    it 'if user want to start and press `start`' do
+    it 'when user want to start and press `start`', positive: true do
       allow(console).to receive(:choice).with(console.question {}).and_return(Console::MENU[:game_start])
       expect(console).to receive(:start).once
       console.start
     end
-
-    it 'if user want to exit and press `exit`' do
+    it 'when user want to exit and press `exit`', positive: true do
       allow(console).to receive(:choice).with(console.question {}).and_return(Console::MENU[:exit])
       expect(console).to receive(:goodbye).once
       console.goodbye
     end
   end
 
-  context 'if an user input is wrong _NEGATIVE' do
-    context 'check an alert output message' do
-      specify { expect { Console.new(Console::MENU[:wrong_choice]) }.to output(print(I18n.t(Console::MENU[:wrong_choice]))).to_stdout }
+  context 'when an user input is wrong', positive: true do
+    context 'when an alert message was outputed ' do
+      specify { expect { described_class.new(Console::MENU[:wrong_choice]) }.to output(print(I18n.t(Console::MENU[:wrong_choice]))).to_stdout }
     end
-    it 'check, that will call the start-menu' do
+
+    it 'when the start-menu was called and user can repeat an input', positive: true do
       allow(console).to receive(:choice).with(console.question {}).and_return('wrong!')
       expect(console).to receive(:choose_the_command).once
       console.choose_the_command
     end
   end
+
   context 'when game start' do
-    before(:each) do
-      @easy = console.difficulty_registration('easy')
-      @medium = console.difficulty_registration('medium')
-      @hell = console.difficulty_registration('hell')
+    it 'when a difficulty was chosen', positive: true do
+      expect(easy).to eq(Console::DIFF[:easy])
+      expect(medium).to eq(Console::DIFF[:medium])
+      expect(hell).to eq(Console::DIFF[:hell])
     end
-    it 'check, a difficulty was chosen?' do
-      expect(@easy).to eq(Console::DIFF[:easy])
-      expect(@medium).to eq(Console::DIFF[:medium])
-      expect(@hell).to eq(Console::DIFF[:hell])
+    it 'when a data type of difficulty is correct', positive: true do
+      expect(easy.class).to eq(Hash)
+      expect(medium.class).to eq(Hash)
+      expect(hell.class).to eq(Hash)
     end
-    it 'check, a  variable difficulty is hash?' do
-      expect(@easy.class).to eq(Hash)
-      expect(@medium.class).to eq(Hash)
-      expect(@hell.class).to eq(Hash)
+    it 'when a volume of difficulty is correct', positive: true do
+      expect(easy.size).to eq(2)
+      expect(medium.size).to eq(2)
+      expect(hell.size).to eq(2)
     end
-
-    it 'check, a size of hash for  variable difficulty' do
-      expect(@easy.size).to eq(2)
-      expect(@medium.size).to eq(2)
-      expect(@hell.size).to eq(2)
+    it 'when all the values of difficulty are exist', positive: true do
+      expect(easy.values.compact.size).to eq(2)
+      expect(medium.values.compact.size).to eq(2)
+      expect(hell.values.compact.size).to eq(2)
     end
-    it 'check, all the values of hash are exist' do
-      expect(@easy.values.compact.size).to eq(2)
-      expect(@medium.values.compact.size).to eq(2)
-      expect(@hell.values.compact.size).to eq(2)
-      expect(@easy[:difficulty].values.compact.size).to eq(2)
-      expect(@medium[:difficulty].values.compact.size).to eq(2)
-      expect(@hell[:difficulty].values.compact.size).to eq(2)
+    it 'when all the values of difficulty are full', positive: true do
+      expect(easy[:difficulty].values.compact.size).to eq(2)
+      expect(medium[:difficulty].values.compact.size).to eq(2)
+      expect(hell[:difficulty].values.compact.size).to eq(2)
     end
-
-    it 'when an user enters a wrong name of difficulty' do
-      allow(console).to receive(:difficulty_registration).with(console.choose_the_difficulty).and_return('SMT')
+    it 'when an user inputs a wrong name of difficulty', positive: true do
+      allow(console).to receive(:difficulty_registration).with('smt').and_call_original
       expect(console).to receive(:choose_the_difficulty).once
       console.choose_the_difficulty
     end

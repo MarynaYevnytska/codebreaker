@@ -1,4 +1,4 @@
-module Validation
+module Validate
   def string?(object)
     check = begin
                 Integer(object)

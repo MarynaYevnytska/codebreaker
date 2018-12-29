@@ -4,7 +4,7 @@ MESSAGE_FOR_USER = { "start_game": 'guess', "failure": 'failure' }.freeze
 USER_ANSWER = { "attempt": 'user_answer', "no_hints": 'no_hints' }.freeze
 ZERO = 0
 class Console_game
-  include Validation
+  include Validate
 
   attr_reader :name, :difficulty
   attr_accessor :messages, :game, :current_hint, :current_attempt, :game_status
@@ -30,6 +30,7 @@ class Console_game
   def game_progress
     @current_hint = @difficulty[:difficulty][:hints].to_i
     @current_attempt = 1
+    puts @current_hint, @current_attempt
     range = 1..@difficulty[:difficulty][:attempts].to_i
     while range.cover?(@current_attempt)
       @game_status = guess_result
@@ -38,7 +39,7 @@ class Console_game
       @messages.answer_for_user(@game_status)
       @current_attempt += 1
     end
-    @messages.game_over(@game.secret_code, statistics)
+    @messages.game_over(@game.secret_code, statistics, @game_status)
   end
 
   def statistics
@@ -63,8 +64,8 @@ class Console_game
     when 'exit' then @messages.goodbye
     else
       input_validate?(console_response)
-      end
     end
+  end
 
   def check_hint(current_hint)
     case current_hint
@@ -73,13 +74,14 @@ class Console_game
       input_handle(user_input, current_hint)
     when 1..@difficulty[:difficulty][:hints].to_i
       view_hint(current_hint)
-     end
+    end
   end
 
   def view_hint(current_hint)
     current_hint -= 1
     @current_hint = current_hint
-    @messages.answer_for_user(@game.get_hint)
+    puts @current_hint
+    @messages.answer_for_user(@game.hint)
     user_game_move
   end
 end
