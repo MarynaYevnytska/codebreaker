@@ -20,11 +20,27 @@ RSpec.describe Console do
       expect(console).to receive(:rules).once
       console.rules
     end
-    it 'when user want to view statistics and press `stats`', positive: true do
-      allow(console).to receive(:choice).with(console.question {}).and_return(Console::MENU[:stats])
-      expect(console).to receive(:stats).once
-      console.stats
+    context 'when user want to view statistics and press `stats`' do
+      it 'when user want to view statistics and press `stats`', positive: true do
+        allow(console).to receive(:choice).with(console.question {}).and_return(Console::MENU[:stats])
+        expect(console).to receive(:stats).once
+        console.stats
+      end
+      it 'when method for print statistics data is called', positive: true do
+        allow(console).to receive(:print_statistic).and_call_original
+        expect(console).to receive(:print_statistic).once
+        console.print_statistic
+      end
+      it 'when datas from file is got', positive: true do
+        allow(console).to receive(:stats).and_call_original
+        expect(console.print_statistic).to be_instance_of(Array)
+      end
+      it 'when datas from file is hash', positive: true do
+        allow(console).to receive(:stats).and_call_original
+        expect(console.print_statistic[0]).to be_instance_of(Hash)
+      end
     end
+
     it 'when user want to start and press `start`', positive: true do
       allow(console).to receive(:choice).with(console.question {}).and_return(Console::MENU[:game_start])
       expect(console).to receive(:start).once

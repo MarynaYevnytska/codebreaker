@@ -41,3 +41,7 @@ en:
   restart?: 'Do you want to try again? (y/n)'
   name: 'Name must be full string, which  min length - 3 symbols, max length - 20 symbols.'
   nil: "-----------------------------------------------------------------------------------\n"
+  statistics:   "%{rating} \n
+              Name: %{name} Difficulty: %{difficulty} \n"
+  game_attemt: " Attempts Total: %{attempts_total} Attempts Used: %{attempts_used} \n"
+  game_hint:   " Hints Total: %{hints_total} Hints Used: %{hints_used} \n"

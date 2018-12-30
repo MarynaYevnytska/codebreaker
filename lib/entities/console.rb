@@ -15,10 +15,12 @@ MENU = { "choose_the_command": 'choose_the_command',
          "describe_diff": 'difficult', "user_answer": 'user_answer',
          "wrong_choice": 'wrong_choice', "name": 'name',
          "win": 'win', "failure": 'failure',
-         "restart?": 'restart?', "save?": 'save?' }.freeze
+         "restart?": 'restart?', "save?": 'save?',
+         "statistics": 'statistics', "game_attemt": 'game_attemt',
+         "game_hint": 'game_hint' }.freeze
 
 class Console
-  include Storage
+  include Load
   include Validate
 
   def initialize(send_to_console = 'greeting')
@@ -67,8 +69,17 @@ class Console
     choice(question {})
   end
 
+  def print_statistic
+    list = load_statistics(FILE_NAME_ST)
+    list.each_with_index do |value, index|
+      puts I18n.t(MENU[:statistics], rating: index + 1, name: value[:user_name], difficulty: value[:difficulty])
+      puts I18n.t(MENU[:game_attemt], attempts_total: value[:attempts_total], attempts_used: value[:attempts_used])
+      puts I18n.t(MENU[:game_hint], hints_total: value[:hints_total], hints_used: value[:hints_used])
+    end
+  end
+
   def stats
-    puts load_settings(FILE_NAME_ST)
+    print_statistic
     choice(question {})
   end
 
@@ -110,12 +121,12 @@ class Console
     Console_game.new(name, difficulty).game_progress
   end
 
-  def save?
-    save(game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
+  def save?(_game_statistics)
+    save(_game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
   end
 
   def start?
-    start if question { I18n.t(MENU[:restart?]) } == MENU[:yes]
+    choose_the_command if question { I18n.t(MENU[:restart?]) } == MENU[:yes]
   end
 
   def game_over(s_code, _game_statistics, game_status = 'failure')
@@ -124,7 +135,7 @@ class Console
     when 'win' then puts I18n.t(MENU[:win]).colorize(:red)
     when 'failure' then puts I18n.t(MENU[:failure]).colorize(:grey)
     end
-    save?
+    save?(_game_statistics)
     start?
     goodbye
   end

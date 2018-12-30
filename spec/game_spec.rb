@@ -2,7 +2,7 @@ RSpec.describe Game do
   let(:game) { described_class.new(Console::DIFF[:medium]) }
   let(:console_game) { Console_game.new('Sergey', Console::DIFF[:medium]) }
   let (:difficulty) { game.difficulty }
-  let (:secret_code) { game.secret_code}
+  let (:secret_code) { game.secret_code }
   let (:hint_clone_scode) { game.hint_clone_scode }
 
   context 'when the game started and datas move to processor' do
@@ -27,13 +27,13 @@ RSpec.describe Game do
     end
 
     it 'when the sequence of `secret_code` is not same as `hint_clone_scode`  at the start', positive: true do
-      expect(hint_clone_scode).not_to eq(secret_code )
+      expect(hint_clone_scode).not_to eq(secret_code)
     end
   end
 
   context 'when user did a coorect input of number' do
     it 'when secret code equles user input, return game status `win`' do
-      user_input=secret_code.join
+      user_input = secret_code.join
       allow(game).to receive(:compare).with(user_input).and_call_original
       expect(game.compare(user_input)).to eq(Console::MESSAGE_GU[:win])
     end
@@ -89,17 +89,37 @@ RSpec.describe Game do
   end
 
   context 'when user get the hint' do
-    it 'when  reminder after first hint is correct' do
+    it 'when hint exits' do
       allow(game).to receive(:hint).and_call_original
       expect(game.hint).to be_instance_of(String)
     end
-    it 'when  reminder after first hint is correct' do
-      allow(game).to receive(:hint).once
-      expect(game.hint_clone_scode.size).to eq(DIGIT-1)
+    it 'when hint is only 1 number' do # :TODO don't pass evry time!
+      allow(game).to receive(:hint).and_call_original
+      expect(game.hint.length).to eq(1)
     end
+    it 'when  reminder after first hint is exists' do
+      allow(game).to receive(:hint).once.and_call_original
+      expect(game.hint_clone_scode).to be_instance_of(Array)
+    end
+  end
+
+  context 'when the hit was viewed' do
+    before do
+      expect(game).to receive(:hint).exactly(HINT - HINT + 1).times # :TODO How to get result of method implementation N-times?
+    end
+
+    before do
+      expect(game).to receive(:hint).exactly(HINT - HINT + 2).times
+    end
+
+    it 'when  reminder after first hint is correct' do
+      # allow(game).to receive(:hint).and_call_original
+      expect(game.hint_clone_scode.size).to eq(DIGIT - 1)
+    end
+
     it 'when reminder after second hint is correct' do
-      allow(game).to receive(:hint).twice
-      expect(game.hint_clone_scode.size).to eq(DIGIT-2)
+      # allow(game).to receive(:hint).and_call_original
+      expect(game.hint_clone_scode.size).to eq(DIGIT - 2)
     end
   end
 end

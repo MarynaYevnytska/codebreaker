@@ -30,7 +30,6 @@ class Console_game
   def game_progress
     @current_hint = @difficulty[:difficulty][:hints].to_i
     @current_attempt = 1
-    puts @current_hint, @current_attempt
     range = 1..@difficulty[:difficulty][:attempts].to_i
     while range.cover?(@current_attempt)
       @game_status = guess_result
@@ -43,13 +42,13 @@ class Console_game
   end
 
   def statistics
-    attempts_used = @difficulty[:difficulty][:attempts] - @current_attempt
+    attempts_used = @current_attempt-1
     hints_used = @difficulty[:difficulty][:hints] - @current_hint
-    { "user_name": @name, "game_status": @game_status,
+    { "user_name": @name,
       "difficulty": @difficulty[:name],
-      "attempts_total": @attempts_total,
+      "attempts_total": @difficulty[:difficulty][:attempts],
       "attempts_used": attempts_used,
-      "hints_total": @hints_total,
+      "hints_total": @difficulty[:difficulty][:hints],
       "hints_used": hints_used }
   end
 
