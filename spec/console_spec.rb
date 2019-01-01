@@ -27,7 +27,7 @@ RSpec.describe Console do
         console.stats
       end
       it 'when method for print statistics data is called', positive: true do
-        allow(console).to receive(:print_statistic).and_call_original
+        allow(console).to receive(:stats).and_call_original
         expect(console).to receive(:print_statistic).once
         console.print_statistic
       end

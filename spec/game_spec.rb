@@ -1,9 +1,18 @@
+DIFF = { "easy": { "name": 'Easy',
+                   "difficulty": { "hints": 2, "attempts": 15 } },
+         "medium": { "name": 'Medium',
+                     "difficulty": { "hints": 1, "attempts": 10 } },
+         "hell": { "name": 'Hell',
+                   "difficulty": { "hints": 1, "attempts": 5 } } }.freeze
+HINT= DIFF[:easy][:difficulty][:hints]
+DIGIT= 4
+NUMBER = '1' * DIGIT # 1111
 RSpec.describe Game do
-  let(:game) { described_class.new(Console::DIFF[:medium]) }
-  let(:console_game) { Console_game.new('Sergey', Console::DIFF[:medium]) }
-  let (:difficulty) { game.difficulty }
-  let (:secret_code) { game.secret_code }
-  let (:hint_clone_scode) { game.hint_clone_scode }
+  let!(:game) { described_class.new(DIFF[:easy]) }
+  let!(:console_game) { Console_game.new('Sergey', DIFF[:easy]) }
+  let!(:difficulty) { game.difficulty }
+  let!(:secret_code) { game.secret_code }
+  let!(:hint_clone_scode) { game.hint_clone_scode }
 
   context 'when the game started and datas move to processor' do
     it 'when the variable `difficulty` is exist', positive: true do
@@ -19,7 +28,7 @@ RSpec.describe Game do
     end
 
     it 'when the digit of `secret_code` is correct', positive: true do
-      expect(secret_code.size).to eq(Game::DIGIT)
+      expect(secret_code.size).to eq(DIGIT)
     end
 
     it 'when the digit of `secret_code` equal `hint_clone_scode` at the start', positive: true do
@@ -27,23 +36,22 @@ RSpec.describe Game do
     end
 
     it 'when the sequence of `secret_code` is not same as `hint_clone_scode`  at the start', positive: true do
-      expect(hint_clone_scode).not_to eq(secret_code)
+      expect(game.hint_clone_scode).not_to eq(game.secret_code)
     end
   end
 
   context 'when user did a coorect input of number' do
     it 'when secret code equles user input, return game status `win`' do
       user_input = secret_code.join
-      allow(game).to receive(:compare).with(user_input).and_call_original
-      expect(game.compare(user_input)).to eq(Console::MESSAGE_GU[:win])
+      game.compare(user_input)
+      expect(game.compare(user_input)).to eq(MESSAGE_GU[:win])
     end
+
     it 'when user input differen with  secret code, return  call plus-minus factoring' do
-      allow(game).to receive(:compare).with(NUMBER).and_call_original
-      expect(game.compare(NUMBER)).to receive(:plus_minus_factoring).with(NUMBER).once
       game.compare(NUMBER)
+      expect(game).to receive(:plus_minus_factoring).with(NUMBER).once
     end
     it 'when user input differen with  secret code, return game status' do
-      allow(game).to receive(:compare).with(NUMBER).and_call_original
       expect(game.compare(NUMBER)).to be_instance_of(String)
     end
   end
@@ -89,37 +97,23 @@ RSpec.describe Game do
   end
 
   context 'when user get the hint' do
+    before(:each) do
+      game.hint
+    end
     it 'when hint exits' do
-      allow(game).to receive(:hint).and_call_original
       expect(game.hint).to be_instance_of(String)
     end
-    it 'when hint is only 1 number' do # :TODO don't pass evry time!
-      allow(game).to receive(:hint).and_call_original
+    it 'when hint is exists' do
+      expect(game.hint).to be_instance_of(String)
+    end
+    it 'when hint is only 1 sign' do
       expect(game.hint.length).to eq(1)
     end
     it 'when  reminder after first hint is exists' do
-      allow(game).to receive(:hint).once.and_call_original
       expect(game.hint_clone_scode).to be_instance_of(Array)
     end
   end
-
-  context 'when the hit was viewed' do
-    before do
-      expect(game).to receive(:hint).exactly(HINT - HINT + 1).times # :TODO How to get result of method implementation N-times?
+    it 'when  hint_clone_scode reduces reminder  after first hint by 1' do
+      expect { game.hint }.to change { game.hint_clone_scode.size}.by(-1)
     end
-
-    before do
-      expect(game).to receive(:hint).exactly(HINT - HINT + 2).times
-    end
-
-    it 'when  reminder after first hint is correct' do
-      # allow(game).to receive(:hint).and_call_original
-      expect(game.hint_clone_scode.size).to eq(DIGIT - 1)
-    end
-
-    it 'when reminder after second hint is correct' do
-      # allow(game).to receive(:hint).and_call_original
-      expect(game.hint_clone_scode.size).to eq(DIGIT - 2)
-    end
-  end
 end
