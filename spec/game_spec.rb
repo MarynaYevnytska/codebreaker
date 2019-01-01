@@ -4,12 +4,12 @@ DIFF = { "easy": { "name": 'Easy',
                      "difficulty": { "hints": 1, "attempts": 10 } },
          "hell": { "name": 'Hell',
                    "difficulty": { "hints": 1, "attempts": 5 } } }.freeze
-HINT= DIFF[:easy][:difficulty][:hints]
-DIGIT= 4
+HINT = DIFF[:easy][:difficulty][:hints]
+DIGIT = 4
 NUMBER = '1' * DIGIT # 1111
 RSpec.describe Game do
   let!(:game) { described_class.new(DIFF[:easy]) }
-  let!(:console_game) { Console_game.new('Sergey', DIFF[:easy]) }
+  let!(:console_game) { Console_game.new('Maryna', DIFF[:easy]) }
   let!(:difficulty) { game.difficulty }
   let!(:secret_code) { game.secret_code }
   let!(:hint_clone_scode) { game.hint_clone_scode }
@@ -47,10 +47,6 @@ RSpec.describe Game do
       expect(game.compare(user_input)).to eq(MESSAGE_GU[:win])
     end
 
-    it 'when user input differen with  secret code, return  call plus-minus factoring' do
-      game.compare(NUMBER)
-      expect(game).to receive(:plus_minus_factoring).with(NUMBER).once
-    end
     it 'when user input differen with  secret code, return game status' do
       expect(game.compare(NUMBER)).to be_instance_of(String)
     end
@@ -88,18 +84,20 @@ RSpec.describe Game do
       [[1, 2, 3, 4], [4, 3, 4, 3], '--']
     ].each do |item|
       it "when secret_code is #{item[0]} && the user input is #{item[1]}, the responds to consol will be #{item[2]}" do
-        allow(game).to receive(:plus_minus_factoring).and_call_original
+        allow(game).to receive(:compare).with(item[1].join)
         game.instance_variable_set(:@secret_code, item[0])
-        expect(game.plus_minus_factoring(item[1].join) == item[2]).to eq(false)
-        game.plus_minus_factoring(item[1].join)
+        expect(game.compare(item[1].join) == item[2]).to eq(false)
+        puts game.compare(item[1].join).class
+        game.compare(item[1].join)
       end
     end
   end
 
   context 'when user get the hint' do
-    before(:each) do
+    before do
       game.hint
     end
+
     it 'when hint exits' do
       expect(game.hint).to be_instance_of(String)
     end
@@ -113,7 +111,8 @@ RSpec.describe Game do
       expect(game.hint_clone_scode).to be_instance_of(Array)
     end
   end
-    it 'when  hint_clone_scode reduces reminder  after first hint by 1' do
-      expect { game.hint }.to change { game.hint_clone_scode.size}.by(-1)
-    end
+
+  it 'when  hint_clone_scode reduces reminder  after first hint by 1' do
+    expect { game.hint }.to change { game.hint_clone_scode.size }.by(-1)
+  end
 end

@@ -15,14 +15,6 @@ class Console_game
     @game = Game.new(difficulty)
   end
 
-  def user_input
-    @messages.question { I18n.t(USER_ANSWER[:attempt]) }
-  end
-
-  def user_game_move
-    input_handle(user_input, @current_hint)
-  end
-
   def guess_result
     @game.compare(user_game_move)
   end
@@ -42,7 +34,7 @@ class Console_game
   end
 
   def statistics
-    attempts_used = @current_attempt-1
+    attempts_used = @current_attempt - 1
     hints_used = @difficulty[:difficulty][:hints] - @current_hint
     { "user_name": @name,
       "difficulty": @difficulty[:name],
@@ -50,6 +42,16 @@ class Console_game
       "attempts_used": attempts_used,
       "hints_total": @difficulty[:difficulty][:hints],
       "hints_used": hints_used }
+  end
+
+  private
+
+  def user_game_move
+    input_handle(user_input, @current_hint)
+  end
+
+  def user_input
+    @messages.question { I18n.t(USER_ANSWER[:attempt]) }
   end
 
   def input_validate?(input)
@@ -79,7 +81,6 @@ class Console_game
   def view_hint(current_hint)
     current_hint -= 1
     @current_hint = current_hint
-    puts @current_hint
     @messages.answer_for_user(@game.hint)
     user_game_move
   end
