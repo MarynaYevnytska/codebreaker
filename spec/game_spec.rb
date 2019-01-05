@@ -84,11 +84,10 @@ RSpec.describe Game do
       [[1, 2, 3, 4], [4, 3, 4, 3], '--']
     ].each do |item|
       it "when secret_code is #{item[0]} && the user input is #{item[1]}, the responds to consol will be #{item[2]}" do
-        allow(game).to receive(:compare).with(item[1].join)
+        #allow(game).to receive(:compare).with(item[1].join)
         game.instance_variable_set(:@secret_code, item[0])
-        expect(game.compare(item[1].join) == item[2]).to eq(false)
-        puts game.compare(item[1].join).class
-        game.compare(item[1].join)
+        expect(game.compare(item[1].join)).to eq(item[2])
+        #game.compare(item[1].join)
       end
     end
   end

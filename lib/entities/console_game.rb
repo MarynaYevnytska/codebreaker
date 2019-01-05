@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-
+MESSAGE_GU = { "attempt": 'user_answer',
+               "nil": 'nil',
+               "win": 'win', "failure": 'failure' }.freeze
 MESSAGE_FOR_USER = { "start_game": 'guess', "failure": 'failure' }.freeze
 USER_ANSWER = { "attempt": 'user_answer', "no_hints": 'no_hints' }.freeze
 ZERO = 0
@@ -25,7 +27,7 @@ class Console_game
     range = 1..@difficulty[:difficulty][:attempts].to_i
     while range.cover?(@current_attempt)
       @game_status = guess_result
-      break if @game_status == 'win'
+      break if @game_status == MESSAGE_GU[:win]
 
       @messages.answer_for_user(@game_status)
       @current_attempt += 1

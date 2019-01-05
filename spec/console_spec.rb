@@ -10,19 +10,19 @@ RSpec.describe Console do
       #result_call_stats = console.choice(Console::MENU[:stats])
       # allow(console).to receive(:choice).with(Console::MENU[:stats]).and_call_original
       # expect{console.choice(Console::MENU[:stats])}.to output(I18n.t(Console::MENU[:statistics])).to_stdout
-      expect(STDOUT).to receive(:puts).with(I18n.t(Console::MENU[:statistics]))
-      console.choice(Console::MENU[:stats])
+      expect(STDOUT).to receive(:puts).with(I18n.t(MENU[:statistics]))
+      console.choice(MENU[:stats])
     end
     it 'when user want to view rules  and press `rules`' do
-      expect(STDOUT).to receive(:puts).with(I18n.t(Console::MENU[:game_rules]))
-      console.choice(Console::MENU[:game_rules])
+      expect(STDOUT).to receive(:puts).with(I18n.t(MENU[:game_rules]))
+      console.choice(MENU[:game_rules])
     end
     it 'when user want to close app and press `goodbye`' do
-      expect(STDOUT).to receive(:puts).with(I18n.t(Console::MENU[:goodbye]))
-      console.choice(Console::MENU[:goodbye])
+      expect(STDOUT).to receive(:puts).with(I18n.t(MENU[:goodbye]))
+      console.choice(MENU[:goodbye])
     end
     it 'when user want to continue  and press `y`', positive: true do
-      allow(console).to receive(:choice).with(console.question {}).and_return(Console::MENU[:yes])
+      allow(console).to receive(:choice).with(console.question {}).and_return(MENU[:yes])
       expect(console).to receive(:choose_the_command).once
       console.choose_the_command
     end
@@ -30,7 +30,7 @@ RSpec.describe Console do
 
   context 'when an user input is wrong', positive: true do
     it 'when user input is INvalid' do
-      expect(STDOUT).to receive(:puts).with(I18n.t(Console::MENU[:choose_the_command]))
+      expect(STDOUT).to receive(:puts).with(I18n.t(MENU[:choose_the_command]))
       console.choice('smt')
     end
     it 'when the start-menu was called and user can repeat an input', positive: true do

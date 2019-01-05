@@ -43,7 +43,8 @@ RSpec.describe Console_game do
 
   context 'when game params is correct  at the start game', positive: true do
     before do
-      allow(console_game).to receive(:game_progress).and_return(NUMBER)
+      compare_result=game.compare(NUMBER)
+      allow(console).to receive(:guess_result).with(compare_result).and_return(console_game.game_status)
     end
 
     it 'when the content of current attempt is correct  at the start game' do
@@ -53,6 +54,7 @@ RSpec.describe Console_game do
       expect(console_game.current_hint).to eq(DIFF[:easy][:difficulty][:hints])
     end
     it 'when the content of game status is correct  at the start game' do
+      #binding.pry
       expect(console_game.game_status).to be_instance_of(String)
     end
   end
