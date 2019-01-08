@@ -43,7 +43,7 @@ RSpec.describe Load do
     end
     context 'when storage unions by rating' do
       it 'when storage befor union by rating is exist' do
-        expect(dummy_class.rating).to be_instance_of(Array)
+        expect(dummy_class.rating(list)).to be_instance_of(Array)
       end
       it 'when each item of storage after union by rating is exit' do
          rating.each { |item| expect(item).to be_instance_of(Hash) }
