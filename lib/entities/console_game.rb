@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 MESSAGE_GU = { "attempt": 'user_answer',
                "nil": 'nil',
-               "win": 'win', "failure": 'failure' }.freeze
+               "win": '++++', "failure": 'failure' }.freeze
 MESSAGE_FOR_USER = { "start_game": 'guess', "failure": 'failure' }.freeze
 USER_ANSWER = { "attempt": 'user_answer', "no_hints": 'no_hints' }.freeze
 ZERO = 0
@@ -17,9 +17,6 @@ class Console_game
     @game = Game.new(difficulty)
   end
 
-  def guess_result
-    @game.compare(user_game_move)
-  end
 
   def game_progress
     @current_hint = @difficulty[:difficulty][:hints].to_i
@@ -35,6 +32,8 @@ class Console_game
     @messages.game_over(@game.secret_code, statistics, @game_status)
   end
 
+  private
+
   def statistics
     attempts_used = @current_attempt - 1
     hints_used = @difficulty[:difficulty][:hints] - @current_hint
@@ -46,7 +45,10 @@ class Console_game
       "hints_used": hints_used }
   end
 
-  private
+  def guess_result
+    @game.compare(user_game_move)
+  end
+
 
   def user_game_move
     input_handle(user_input, @current_hint)

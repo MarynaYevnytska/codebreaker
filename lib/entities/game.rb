@@ -2,7 +2,7 @@ NUM_RANGE = 6
 DIGIT = 4
 MESSAGE_GU = { "attempt": 'user_answer',
                "nil": 'nil',
-               "win": 'win', "failure": 'failure' }.freeze
+               "win": '++++', "failure": 'failure' }.freeze
 PLUS = '+'.freeze
 MINUS = '-'.freeze
 
@@ -39,31 +39,37 @@ class Game
 
   def plus_factor(user_input)
     @answer_plus = []
-    @remainder_plus_factor = Array.new(4, NUM_RANGE + 1)
+    @remainder_plus_factor =user_input.chars
     user_input.chars.each_with_index do |val_user, ind_user|
       @secret_code.each_with_index do |val_sec, ind_sec|
         if val_sec == val_user && ind_user == ind_sec
           @answer_plus.push(PLUS)
           @remainder_plus_factor[ind_user] = nil
-        else
-          @remainder_plus_factor[ind_user] = val_user
         end
       end
     end
  end
 
   def minus_factor
-    @answer_minus = {}
-    @remainder_plus_factor.each_with_index do |val_user, ind_user|
+    @answer_minus =[]
       @secret_code.each_with_index do |val_sec, ind_sec|
-        @answer_minus[val_user] = MINUS if val_sec == val_user && ind_sec != ind_user
+        @remainder_plus_factor.each_with_index do |val_user, ind_user|
+         if val_sec == val_user
+               @answer_minus.push(MINUS)
+               if @secret_code.count(val_sec)==@remainder_plus_factor.count(val_sec)
+                @remainder_plus_factor[ind_user] = NUM_RANGE+1
+              else
+                @remainder_plus_factor.map!{|item| item == val_sec ? NUM_RANGE+1 : item}
+              end
+          end
+        end
       end
-    end
   end
 
   def plus_minus_factoring(user_input)
     plus_factor(user_input)
     minus_factor
-    @answer_plus.push(@answer_minus.values).join
+    #binding.pry
+    @answer_plus.push(@answer_minus).join
   end
 end

@@ -1,4 +1,4 @@
-FILE_NAME_ST = '../stat.yml'.freeze
+FILE_NAME_ST = './stat.yml'.freeze
 NAME_RANGE = (3..20).freeze
 DIFF = { "easy": { "name": 'Easy',
                    "difficulty": { "hints": 2, "attempts": 15 } },

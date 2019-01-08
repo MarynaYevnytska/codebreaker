@@ -7,6 +7,8 @@ DIFF = { "easy": { "name": 'Easy',
 HINT = DIFF[:easy][:difficulty][:hints]
 DIGIT = 4
 NUMBER = '1' * DIGIT # 1111
+NUM_RANGE=6
+
 RSpec.describe Game do
   let!(:game) { described_class.new(DIFF[:easy]) }
   let!(:console_game) { Console_game.new('Maryna', DIFF[:easy]) }
@@ -47,20 +49,17 @@ RSpec.describe Game do
       expect(game.compare(user_input)).to eq(MESSAGE_GU[:win])
     end
 
-    it 'when user input differen with  secret code, return game status' do
-      expect(game.compare(NUMBER)).to be_instance_of(String)
-    end
   end
-
   context 'when the method plus-minus factoring output correct value' do
     [
       [[6, 5, 4, 1], [6, 5, 4, 1], '++++'],
+      [[1, 2, 3, 4], [4, 3, 4, 3], '--'],
+      [[1, 2, 3, 4], [2, 4, 3, 1], '+---'],
       [[1, 5, 3, 2], [5, 1, 3, 2], '++--'],
       [[1, 2, 3, 4], [1, 3, 2, 4], '++--'],
       [[1, 2, 3, 4], [1, 2, 4, 3], '++--'],
       [[1, 2, 3, 4], [1, 4, 2, 3], '+---'],
       [[1, 2, 3, 4], [4, 2, 1, 3], '+---'],
-      [[1, 2, 3, 4], [2, 4, 3, 1], '+---'],
       [[1, 2, 3, 4], [2, 3, 1, 4], '+---'],
       [[1, 2, 3, 4], [4, 3, 2, 1], '----'],
       [[5, 4, 3, 2], [2, 3, 4, 5], '----'],
@@ -81,31 +80,21 @@ RSpec.describe Game do
       [[5, 3, 1, 3], [3, 3, 1, 5], '++--'],
       [[1, 5, 3, 3], [3, 3, 1, 5], '----'],
       [[5, 3, 3, 1], [3, 3, 1, 5], '+---'],
-      [[1, 2, 3, 4], [4, 3, 4, 3], '--']
+
     ].each do |item|
       it "when secret_code is #{item[0]} && the user input is #{item[1]}, the responds to consol will be #{item[2]}" do
-        #allow(game).to receive(:compare).with(item[1].join)
-        game.instance_variable_set(:@secret_code, item[0])
+        game.instance_variable_set(:@secret_code, item[0].join.chars)
         expect(game.compare(item[1].join)).to eq(item[2])
-        #game.compare(item[1].join)
       end
     end
   end
 
   context 'when user get the hint' do
-    before do
-      game.hint
-    end
 
-    it 'when hint exits' do
-      expect(game.hint).to be_instance_of(String)
-    end
     it 'when hint is exists' do
       expect(game.hint).to be_instance_of(String)
     end
-    it 'when hint is only 1 sign' do
-      expect(game.hint.length).to eq(1)
-    end
+
     it 'when  reminder after first hint is exists' do
       expect(game.hint_clone_scode).to be_instance_of(Array)
     end
