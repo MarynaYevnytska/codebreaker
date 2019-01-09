@@ -1,5 +1,5 @@
 RSpec.describe Console do
-  let! (:console) { described_class.new(nil) }
+  let(:console) { described_class.new }
 
   context 'when gem run user see greeting message' do
     specify { expect { described_class.new }.to output(print(I18n.t('greeting'))).to_stdout }
@@ -7,7 +7,7 @@ RSpec.describe Console do
 
   context 'when an user input is valid' do
     it 'when user want to view statistics and press `stats`' do
-      #result_call_stats = console.choice(Console::MENU[:stats])
+      # result_call_stats = console.choice(Console::MENU[:stats])
       # allow(console).to receive(:choice).with(Console::MENU[:stats]).and_call_original
       # expect{console.choice(Console::MENU[:stats])}.to output(I18n.t(Console::MENU[:statistics])).to_stdout
       expect(STDOUT).to receive(:puts).with(I18n.t(MENU[:statistics]))

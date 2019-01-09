@@ -1,20 +1,25 @@
- # position data base for each gamerating
+# position data base for each gamerating
+DIFF = { "easy": { "name": 'Easy',
+                   "difficulty": { "hints": 2, "attempts": 15 } },
+         "medium": { "name": 'Medium',
+                     "difficulty": { "hints": 1, "attempts": 10 } },
+         "hell": { "name": 'Hell',
+                   "difficulty": { "hints": 1, "attempts": 5 } } }.freeze
+
 RSpec.describe Load do
-
-
   let(:dummy_class) { Class.new { extend Load } }
   let(:list) { dummy_class.load_documents(FILE_NAME_ST) }
-  let (:rating){dummy_class.rating(list)}
+  let(:rating) { dummy_class.rating(list) }
 
   it 'when use `load_documents` ' do
-    stub_const("FILE_NAME_ST", './spec/fixtures/stat.yml')
+    stub_const('FILE_NAME_ST', './spec/fixtures/stat.yml')
     expect(dummy_class.load_documents(FILE_NAME_ST)).to be_instance_of(Array)
   end
   context 'when storage is sorting' do
-    before(:each) do
-      stub_const("FILE_NAME_ST", './spec/fixtures/stat.yml')
-      list=dummy_class.load_documents(FILE_NAME_ST)
+    before do
+      stub_const('FILE_NAME_ST', './spec/fixtures/stat.yml')
     end
+
     it 'when storage is sorted by used attemts data type is correct' do
       expect(dummy_class.sorting_by_attemt(list)).to be_instance_of(Array)
     end
@@ -35,18 +40,18 @@ RSpec.describe Load do
     it 'when storage is grupped by difficulty' do
       expect(dummy_class.groupping_by_difficulty(list)).to be_instance_of(Hash)
     end
-    it 'when storage is sorted by used attemts && by used hints && grupped by difficulty' do
+    it 'when storage is sorted by used attemts && by used hints && grupped by difficulty and get hash' do
       expect(dummy_class.sorted(list)).to be_instance_of(Hash)
     end
     it 'when storage is sorted by used attemts && by used hints && grupped by difficulty' do
-      expect((1..Console::DIFF.keys.size).cover?(dummy_class.sorted(list).keys.size)).to eq(true)
+      expect((1..DIFF.keys.size).cover?(dummy_class.sorted(list).keys.size)).to eq(true)
     end
     context 'when storage unions by rating' do
       it 'when storage befor union by rating is exist' do
         expect(dummy_class.rating(list)).to be_instance_of(Array)
       end
       it 'when each item of storage after union by rating is exit' do
-         rating.each { |item| expect(item).to be_instance_of(Hash) }
+        expect(rating).to all(be_instance_of(Hash))
       end
     end
   end

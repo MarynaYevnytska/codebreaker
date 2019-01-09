@@ -1,9 +1,9 @@
-NAME_RANGE=3..20
-DIGIT=4
+NAME_RANGE = (3..20).freeze
+DIGIT = 4
 MIN = 'a' * NAME_RANGE.first # 3.times(a)
 MAX = 'a' * NAME_RANGE.last # 20.times(a)
-MIN_DOWN = 'a' * ( NAME_RANGE.first - 1) # 19.times(a)
-MAX_UP = 'a' * ( NAME_RANGE.last + 1) # 21.times(a)
+MIN_DOWN = 'a' * (NAME_RANGE.first - 1) # 19.times(a)
+MAX_UP = 'a' * (NAME_RANGE.last + 1) # 21.times(a)
 NUMBER = ('1' * DIGIT) # 4.times(1)
 NUMBER_UP = ('1' * (DIGIT + 1)) # 5.times(1)
 

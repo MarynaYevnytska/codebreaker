@@ -7,11 +7,11 @@ DIFF = { "easy": { "name": 'Easy',
 HINT = DIFF[:easy][:difficulty][:hints]
 DIGIT = 4
 NUMBER = '1' * DIGIT # 1111
-NUM_RANGE=6
+NUM_RANGE = 6
 
 RSpec.describe Game do
   let!(:game) { described_class.new(DIFF[:easy]) }
-  let!(:console_game) { Console_game.new('Maryna', DIFF[:easy]) }
+  let(:console_game) { Console_game.new('Maryna', DIFF[:easy]) }
   let!(:difficulty) { game.difficulty }
   let!(:secret_code) { game.secret_code }
   let!(:hint_clone_scode) { game.hint_clone_scode }
@@ -48,8 +48,8 @@ RSpec.describe Game do
       game.compare(user_input)
       expect(game.compare(user_input)).to eq(MESSAGE_GU[:win])
     end
-
   end
+
   context 'when the method plus-minus factoring output correct value' do
     [
       [[6, 5, 4, 1], [6, 5, 4, 1], '++++'],
@@ -79,7 +79,7 @@ RSpec.describe Game do
       [[1, 3, 5, 3], [3, 3, 1, 5], '+---'],
       [[5, 3, 1, 3], [3, 3, 1, 5], '++--'],
       [[1, 5, 3, 3], [3, 3, 1, 5], '----'],
-      [[5, 3, 3, 1], [3, 3, 1, 5], '+---'],
+      [[5, 3, 3, 1], [3, 3, 1, 5], '+---']
 
     ].each do |item|
       it "when secret_code is #{item[0]} && the user input is #{item[1]}, the responds to consol will be #{item[2]}" do
@@ -90,7 +90,6 @@ RSpec.describe Game do
   end
 
   context 'when user get the hint' do
-
     it 'when hint is exists' do
       expect(game.hint).to be_instance_of(String)
     end

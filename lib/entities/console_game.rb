@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 MESSAGE_GU = { "attempt": 'user_answer',
                "nil": 'nil',
                "win": '++++', "failure": 'failure' }.freeze
@@ -16,7 +17,6 @@ class Console_game
     @messages = Console.new(MESSAGE_FOR_USER[:start_game])
     @game = Game.new(difficulty)
   end
-
 
   def game_progress
     @current_hint = @difficulty[:difficulty][:hints].to_i
@@ -48,7 +48,6 @@ class Console_game
   def guess_result
     @game.compare(user_game_move)
   end
-
 
   def user_game_move
     input_handle(user_input, @current_hint)
