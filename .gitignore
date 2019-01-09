@@ -13,3 +13,4 @@ foodie.gemspec
 lib/foodie.rb
 lib/foodie/version.rb
 spec/foodie_spec.rb
+.circleci/config.yml
