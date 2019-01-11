@@ -36,7 +36,7 @@ class Console
     when MENU[:no] then goodbye
     when MENU[:yes] then choose_the_command
     when MENU[:game_rules] then rules
-    when MENU[:stats] then stats
+    when MENU[:stats] then stats #binding.pry
     when MENU[:game_start] then start
     when MENU[:exit] then goodbye
     else
@@ -55,13 +55,13 @@ class Console
     gets.chomp
   end
 
-  def game_over(s_code, game_statistics, game_status = 'failure')
+  def game_over(s_code, _game_statistics, game_status = 'failure')
     puts "Secret code is #{s_code.join}"
     case game_status
     when 'win' then puts I18n.t(MENU[:win])
     when 'failure' then puts I18n.t(MENU[:failure])
     end
-    save?(game_statistics)
+    save?(_game_statistics)
     start?
     goodbye
   end
@@ -134,8 +134,8 @@ class Console
     difficulty_registration(choose_the_difficulty)
   end
 
-  def save?(game_statistics)
-    save(game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
+  def save?(_game_statistics)
+    save(_game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
   end
 
   def start?

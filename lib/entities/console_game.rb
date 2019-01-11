@@ -23,7 +23,8 @@ class Console_game
     @current_attempt = 1
     range = 1..@difficulty[:difficulty][:attempts].to_i
     while range.cover?(@current_attempt)
-      @game_status = guess_result
+        #binding.pry
+        @game_status = guess_result
       break if @game_status == MESSAGE_GU[:win]
 
       @messages.answer_for_user(@game_status)
@@ -32,7 +33,13 @@ class Console_game
     @messages.game_over(@game.secret_code, statistics, @game_status)
   end
 
+
+
   private
+  
+  def user_game_move
+    input_handle(user_input, @current_hint)
+  end
 
   def statistics
     attempts_used = @current_attempt - 1
@@ -49,9 +56,7 @@ class Console_game
     @game.compare(user_game_move)
   end
 
-  def user_game_move
-    input_handle(user_input, @current_hint)
-  end
+
 
   def user_input
     @messages.question { I18n.t(USER_ANSWER[:attempt]) }
