@@ -19,12 +19,12 @@ class Console_game
   end
 
   def game_progress
+    # binding.pry
     @current_hint = @difficulty[:difficulty][:hints].to_i
     @current_attempt = 1
     range = 1..@difficulty[:difficulty][:attempts].to_i
     while range.cover?(@current_attempt)
-        #binding.pry
-        @game_status = guess_result
+      @game_status = guess_result
       break if @game_status == MESSAGE_GU[:win]
 
       @messages.answer_for_user(@game_status)
@@ -33,13 +33,7 @@ class Console_game
     @messages.game_over(@game.secret_code, statistics, @game_status)
   end
 
-
-
   private
-  
-  def user_game_move
-    input_handle(user_input, @current_hint)
-  end
 
   def statistics
     attempts_used = @current_attempt - 1
@@ -53,26 +47,26 @@ class Console_game
   end
 
   def guess_result
-    @game.compare(user_game_move)
+    @game.compare(input_handle)
   end
-
-
 
   def user_input
     @messages.question { I18n.t(USER_ANSWER[:attempt]) }
   end
 
-  def input_validate?(input)
-    input = user_input until errors_array_guess(input, (DIGIT..DIGIT))
-    input
-  end
+  def input_handle
+    loop do
+      input = user_input
+      case input
+      when 'hint' then check_hint(@current_hint)
+      when 'exit' then @messages.goodbye
+      else
+        if errors_array_guess(input, (DIGIT..DIGIT))
+          return input
+          break
 
-  def input_handle(console_response, current_hint)
-    case console_response
-    when 'hint' then check_hint(current_hint)
-    when 'exit' then @messages.goodbye
-    else
-      input_validate?(console_response)
+        end
+      end
     end
   end
 
@@ -80,7 +74,7 @@ class Console_game
     case current_hint
     when ZERO
       puts I18n.t(USER_ANSWER[:no_hints])
-      input_handle(user_input, current_hint)
+      input_handle
     when 1..@difficulty[:difficulty][:hints].to_i
       view_hint(current_hint)
     end
@@ -90,6 +84,6 @@ class Console_game
     current_hint -= 1
     @current_hint = current_hint
     @messages.answer_for_user(@game.hint)
-    user_game_move
+    input_handle
   end
 end

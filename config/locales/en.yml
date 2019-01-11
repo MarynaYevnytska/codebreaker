@@ -1,7 +1,7 @@
 en:
   goodbye: 'Goodbye'
-  greeting: "Hello,'Codebreaker' is logic game in which you could tries to break a secret code created by a computer.\n
-                    Do you want continue? (y/n): "
+  greeting: "Hello,'Codebreaker' is logic game in which you could tries to break a secret code created by a computer.\n"
+  continue?:  "Do you want continue? (y/n): "
   choose_the_command: "Choose the command\n
       -Enter keyword rules if you want to see rules of the game -\n
       -Enter keyword stats if you want to see the statistics of users results\n

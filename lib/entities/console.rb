@@ -17,7 +17,7 @@ MENU = { "choose_the_command": 'choose_the_command',
          "win": 'win', "failure": 'failure',
          "restart?": 'restart?', "save?": 'save?',
          "statistics": 'statistics', "game_attemt": 'game_attemt',
-         "game_hint": 'game_hint' }.freeze
+         "game_hint": 'game_hint', "continue?": 'continue?' }.freeze
 
 class Console
   include Load
@@ -31,29 +31,14 @@ class Console
     puts "Secret code has #{answer}"
   end
 
-  def choice(user_choice)
-    case user_choice
-    when MENU[:no] then goodbye
-    when MENU[:yes] then choose_the_command
-    when MENU[:game_rules] then rules
-    when MENU[:stats] then stats #binding.pry
-    when MENU[:game_start] then start
-    when MENU[:exit] then goodbye
-    else
-      puts I18n.t(MENU[:wrong_choice])
-      choose_the_command
-    end
-  end
-
-  def choose_the_command
-    puts I18n.t(MENU[:choose_the_command])
-    choice(question { I18n.t(MENU[:user_answer]) })
-  end
-
   def question
     print yield
     gets.chomp
   end
+
+
+
+
 
   def game_over(s_code, _game_statistics, game_status = 'failure')
     puts "Secret code is #{s_code.join}"
@@ -67,28 +52,46 @@ class Console
   end
 
   def goodbye
-    puts I18n.t(MENU[:goodbye])
-    exit
+    puts 'Exit'.chomp
   end
 
   def start
     Console_game.new(name, difficulty).game_progress
   end
 
-  private
 
-  def exit
-    puts 'exit'.chomp
+
+  def choice
+    puts I18n.t(MENU[:continue?])
+    loop do
+      case question {}
+      when MENU[:yes] then
+        puts I18n.t(MENU[:choose_the_command])
+        next
+      when MENU[:no]
+        goodbye
+        break
+      when MENU[:exit]
+        goodbye
+        break
+      when MENU[:game_rules] then return rules
+      when MENU[:stats] then return stats
+      when MENU[:game_start] then start
+      else
+        puts I18n.t(MENU[:wrong_choice])
+      end
+    end
   end
+
+private
 
   def rules
     puts I18n.t(MENU[:game_rules])
-    choice(question {})
+    choice
   end
 
   def print_statistic
-    list = load_statistics(FILE_NAME_ST)
-    list.each_with_index do |value, index|
+    load_statistics(FILE_NAME_ST).each_with_index do |value, index|
       puts I18n.t(MENU[:statistics], rating: index + 1, name: value[:user_name], difficulty: value[:difficulty],
                                      attempts_total: value[:attempts_total], attempts_used: value[:attempts_used],
                                      hints_total: value[:hints_total], hints_used: value[:hints_used])
@@ -97,7 +100,7 @@ class Console
 
   def stats
     print_statistic
-    choice(question {})
+    choice
   end
 
   def name_call
@@ -105,33 +108,42 @@ class Console
     question { I18n.t(MENU[:user_answer]) }
   end
 
-  def validate_name?(name)
-    name = name_call until errors_array_string(name, NAME_RANGE)
-    name
+  def validate_name
+    loop do
+      name = name_call
+      if errors_array_string(name, NAME_RANGE)
+        return name
+        break
+      end
+    end
   end
 
-  def choose_the_difficulty
+  def difficulty
     puts I18n.t(MENU[:describe_diff])
-    question { I18n.t(MENU[:user_answer]) }
-  end
+    loop do
+      case question { I18n.t(MENU[:user_answer]) }.capitalize
+      when DIFF[:easy][:name]
 
-  def difficulty_registration(user_choice)
-    case user_choice.capitalize
-    when DIFF[:easy][:name]     then    DIFF[:easy]
-    when DIFF[:medium][:name]   then    DIFF[:medium]
-    when DIFF[:hell][:name]     then    DIFF[:hell]
-    else
-      puts I18n.t(MENU[:wrong_choice])
-      choose_the_difficulty
+        return DIFF[:easy]
+        break
+
+      when DIFF[:medium][:name]
+
+        return DIFF[:medium]
+        break
+
+      when DIFF[:hell][:name]
+
+        return DIFF[:hell]
+        break
+      else
+        puts I18n.t(MENU[:wrong_choice])
+      end
     end
   end
 
   def name
-    validate_name?(name_call).capitalize
-  end
-
-  def difficulty
-    difficulty_registration(choose_the_difficulty)
+    validate_name.capitalize
   end
 
   def save?(_game_statistics)
@@ -139,6 +151,15 @@ class Console
   end
 
   def start?
-    choose_the_command if question { I18n.t(MENU[:restart?]) } == MENU[:yes]
+    loop do
+      case question { I18n.t(MENU[:restart?]) }
+      when MENU[:yes]
+        choice
+        break
+      when MENU[:no]
+        goodbye
+        break
+      end
+    end
   end
 end
