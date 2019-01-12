@@ -4,7 +4,7 @@ MESSAGE_GU = { "attempt": 'user_answer',
                "nil": 'nil',
                "win": '++++', "failure": 'failure' }.freeze
 MESSAGE_FOR_USER = { "start_game": 'guess', "failure": 'failure' }.freeze
-USER_ANSWER = { "attempt": 'user_answer', "no_hints": 'no_hints' }.freeze
+USER_ANSWER = { "attempt": 'user_answer', "no_hints": 'no_hints', "hint_is": 'hint_is' }.freeze
 ZERO = 0
 class Console_game
   include Validate
@@ -19,19 +19,20 @@ class Console_game
   end
 
   def game_progress
-    #binding.pry
     @current_hint = @difficulty[:difficulty][:hints].to_i
     @current_attempt = 1
     range = 1..@difficulty[:difficulty][:attempts].to_i
     while range.cover?(@current_attempt)
-      #binding.pry
       @game_status = guess_result
-      if @game_status == MESSAGE_GU[:win]
-        break
-
+      case @game_status
+      when MESSAGE_GU[:win] then break
+      when USER_ANSWER[:no_hints] then   @messages.answer_for_user(I18n.t(USER_ANSWER[:no_hints]))
+      when Integer
+        send_to_user = I18n.t(USER_ANSWER[:hint_is], hint: @game_status)
+        @messages.answer_for_user(send_to_user)
       else
-      @messages.answer_for_user(@game_status)
-      @current_attempt += 1
+        @messages.answer_for_user(@game_status)
+        @current_attempt += 1
       end
     end
     @messages.game_over(@game.secret_code, statistics, @game_status)
@@ -51,7 +52,12 @@ class Console_game
   end
 
   def guess_result
-    @game.compare(input_handle)
+    valid_input = input_handle
+    if valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints]
+      return valid_input
+    else
+      @game.compare(valid_input)
+    end
   end
 
   def user_input
@@ -62,17 +68,19 @@ class Console_game
     loop do
       input = user_input
       case input
-        when 'hint'
-          case @current_hint
-            when ZERO
-            puts I18n.t(USER_ANSWER[:no_hints])
-            next
-            when  1..@difficulty[:difficulty][:hints].to_i
-            view_hint(@current_hint)
-            next
-          end
-        when 'exit' then @messages.goodbye
-        else
+      when 'hint'
+        case @current_hint
+        when ZERO
+          return USER_ANSWER[:no_hints]
+          next
+        when 1..@difficulty[:difficulty][:hints].to_i
+          return view_hint(@current_hint)
+          next
+        end
+      when 'exit'
+        @messages.goodbye
+        break
+      else
         if errors_array_guess(input, (DIGIT..DIGIT))
           return input
           break
@@ -86,6 +94,6 @@ class Console_game
   def view_hint(current_hint)
     current_hint -= 1
     @current_hint = current_hint
-    @messages.answer_for_user(@game.hint)
+    @game.hint
   end
 end

@@ -34,6 +34,7 @@ en:
               Choose difficultie, please! "
   user_answer: 'Write you answer here lower-cased and without space:'
   no_hints: "Sorry, you have no hints!"
+  hint_is: "Secret cod has %{hint}!"
   hints: "You have  %{current_hint}"
   win: "Congratulations,you've won the fight!"
   failure: "Sorry,computer has won the fight.Do you want to save the result of game? (y/n)"

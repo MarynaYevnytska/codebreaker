@@ -28,7 +28,7 @@ class Game
     remainder = @hint_clone_scode.pop(@hint_clone_scode.length - 1)
     hint = @hint_clone_scode - remainder
     @hint_clone_scode = remainder
-    hint[0].to_s
+    hint[0].to_i
   end
 
   private

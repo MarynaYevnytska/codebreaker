@@ -38,7 +38,7 @@ RSpec.describe Game do
     end
 
     it 'when the sequence of `secret_code` is not same as `hint_clone_scode`  at the start', positive: true do
-      expect(game.hint_clone_scode).not_to eq(game.secret_code)
+      expect(game.hint_clone_scode!=game.secret_code).to eq(true)
     end
   end
 
@@ -91,7 +91,7 @@ RSpec.describe Game do
 
   context 'when user get the hint' do
     it 'when hint is exists' do
-      expect(game.hint).to be_instance_of(String)
+      expect(game.hint).to be_instance_of(Integer)
     end
 
     it 'when  reminder after first hint is exists' do

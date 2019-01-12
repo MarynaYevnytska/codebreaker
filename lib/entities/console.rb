@@ -28,17 +28,13 @@ class Console
   end
 
   def answer_for_user(answer)
-    puts "Secret code has #{answer}"
+    puts answer.to_s
   end
 
   def question
     print yield
     gets.chomp
   end
-
-
-
-
 
   def game_over(s_code, _game_statistics, game_status = 'failure')
     puts "Secret code is #{s_code.join}"
@@ -52,14 +48,12 @@ class Console
   end
 
   def goodbye
-    puts 'Exit'.chomp
+    puts 'exit'.chomp
   end
 
   def start
     Console_game.new(name, difficulty).game_progress
   end
-
-
 
   def choice
     puts I18n.t(MENU[:continue?])
@@ -79,11 +73,12 @@ class Console
       when MENU[:game_start] then start
       else
         puts I18n.t(MENU[:wrong_choice])
+        next
       end
     end
   end
 
-private
+  private
 
   def rules
     puts I18n.t(MENU[:game_rules])
@@ -138,6 +133,7 @@ private
         break
       else
         puts I18n.t(MENU[:wrong_choice])
+        next
       end
     end
   end
