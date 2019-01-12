@@ -19,16 +19,20 @@ class Console_game
   end
 
   def game_progress
-    # binding.pry
+    #binding.pry
     @current_hint = @difficulty[:difficulty][:hints].to_i
     @current_attempt = 1
     range = 1..@difficulty[:difficulty][:attempts].to_i
     while range.cover?(@current_attempt)
+      #binding.pry
       @game_status = guess_result
-      break if @game_status == MESSAGE_GU[:win]
+      if @game_status == MESSAGE_GU[:win]
+        break
 
+      else
       @messages.answer_for_user(@game_status)
       @current_attempt += 1
+      end
     end
     @messages.game_over(@game.secret_code, statistics, @game_status)
   end
@@ -58,25 +62,24 @@ class Console_game
     loop do
       input = user_input
       case input
-      when 'hint' then check_hint(@current_hint)
-      when 'exit' then @messages.goodbye
-      else
+        when 'hint'
+          case @current_hint
+            when ZERO
+            puts I18n.t(USER_ANSWER[:no_hints])
+            next
+            when  1..@difficulty[:difficulty][:hints].to_i
+            view_hint(@current_hint)
+            next
+          end
+        when 'exit' then @messages.goodbye
+        else
         if errors_array_guess(input, (DIGIT..DIGIT))
           return input
           break
-
+        else
+          next
         end
       end
-    end
-  end
-
-  def check_hint(current_hint)
-    case current_hint
-    when ZERO
-      puts I18n.t(USER_ANSWER[:no_hints])
-      input_handle
-    when 1..@difficulty[:difficulty][:hints].to_i
-      view_hint(current_hint)
     end
   end
 
@@ -84,6 +87,5 @@ class Console_game
     current_hint -= 1
     @current_hint = current_hint
     @messages.answer_for_user(@game.hint)
-    input_handle
   end
 end
