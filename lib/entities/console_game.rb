@@ -53,7 +53,8 @@ class Console_game
 
   def guess_result
     valid_input = input_handle
-    if valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints]
+    #binding.pry
+    if valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints] || valid_input == nil
       return valid_input
     else
       @game.compare(valid_input)
@@ -83,7 +84,7 @@ class Console_game
       else
         if errors_array_guess(input, (DIGIT..DIGIT))
           return input
-          break
+          #break
         else
           next
         end

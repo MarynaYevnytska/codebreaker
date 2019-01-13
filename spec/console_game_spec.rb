@@ -63,30 +63,6 @@ RSpec.describe Console_game do
     end
     it 'when attemts сame  to end and game over' do
     end
-
-  end
-  context 'when user input is number', negative: true do
-    before do
-      allow_any_instance_of(Console).to receive(:question).and_return(NUMBER)
-    end
-
-    it 'when user won the game and calls game_over with secret code, statistics and status' do
-      allow_any_instance_of(Game).to receive(:compare).and_return('win')
-      expect(messages).not_to receive(:game_over).with(kind_of(Array), { attempts_total: 15, attempts_used: 15, difficulty: 'Easy', hints_total: 2, hints_used: 0, user_name: 'Maryna' }, 'win')
-      console_game.game_progress
-    end
-    it 'when computer won the guess and game continue' do
-       allow_any_instance_of(Game).to receive(:compare).and_return('++--')
-       expect(messages).not_to receive(:answer_for_user).with('++--').once
-       console_game.game_progress
-    end
-    it 'when attempt was used if user input is number ' do
-      allow_any_instance_of(Game).to receive(:compare).and_return('++--')
-      expect { game.compare(NUMBER) }.not_to change(console_game, :current_attempt).by(-1)
-    end
-    it 'when attemts сame  to end and game over' do
-    end
-
   end
 
   context 'when user input is hint' do

@@ -28,7 +28,7 @@ class Console
   end
 
   def answer_for_user(answer)
-    puts answer.to_s
+    puts answer
   end
 
   def question
