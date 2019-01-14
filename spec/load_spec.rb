@@ -1,11 +1,3 @@
-# position data base for each gamerating
-DIFF = { "easy": { "name": 'Easy',
-                   "difficulty": { "hints": 2, "attempts": 15 } },
-         "medium": { "name": 'Medium',
-                     "difficulty": { "hints": 1, "attempts": 10 } },
-         "hell": { "name": 'Hell',
-                   "difficulty": { "hints": 1, "attempts": 5 } } }.freeze
-
 RSpec.describe Load do
   let(:dummy_class) { Class.new { extend Load } }
   let(:list) { dummy_class.load_documents(FILE_NAME_ST) }

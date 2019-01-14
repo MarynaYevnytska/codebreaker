@@ -1,14 +1,14 @@
-MENU = { "choose_the_command": 'choose_the_command',
-         "yes": 'y', "no": 'n',
-         "game_rules": 'rules',
-         "stats": 'stats', "game_start": 'start',
-         "goodbye": 'goodbye', "exit": 'exit',
-         "describe_diff": 'difficult', "user_answer": 'user_answer',
-         "wrong_choice": 'wrong_choice', "name": 'name',
-         "win": 'win', "failure": 'failure',
-         "restart?": 'restart?', "save?": 'save?',
-         "statistics": 'statistics', "game_attemt": 'game_attemt',
-         "game_hint": 'game_hint' }.freeze
+# MENU = { "choose_the_command": 'choose_the_command',
+#         "yes": 'y', "no": 'n',
+#         "game_rules": 'rules',
+#         "stats": 'stats', "game_start": 'start',
+#         "goodbye": 'goodbye', "exit": 'exit',
+#         "describe_diff": 'difficult', "user_answer": 'user_answer',
+#         "wrong_choice": 'wrong_choice', "name": 'name',
+#         "win": 'win', "failure": 'failure',
+#         "restart?": 'restart?', "save?": 'save?',
+#         "statistics": 'statistics', "game_attemt": 'game_attemt',
+#         "game_hint": 'game_hint' }.freeze
 
 RSpec.describe Console do
   let!(:console) { described_class.new }
@@ -19,9 +19,9 @@ RSpec.describe Console do
 
   context 'when an user input is valid' do
     it 'when user want to view statistics and press `stats`' do
-       allow(console).to receive(:question).and_return(MENU[:stats])
-       expect(STDOUT).to receive(:puts).with(I18n.t(MENU[:statistics]))
-       console.choice
+      allow(console).to receive(:question).and_return(MENU[:stats])
+      expect(STDOUT).to receive(:puts).with(I18n.t(MENU[:statistics]))
+      console.choice
     end
     it 'when user want to view rules  and press `rules`' do
       allow(console).to receive(:question).and_return(MENU[:game_rules])

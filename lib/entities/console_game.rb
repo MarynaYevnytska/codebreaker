@@ -22,11 +22,12 @@ class Console_game
     @current_hint = @difficulty[:difficulty][:hints].to_i
     @current_attempt = 1
     range = 1..@difficulty[:difficulty][:attempts].to_i
-    while range.cover?(@current_attempt)
+      while range.cover?(@current_attempt)
       @game_status = guess_result
       case @game_status
       when MESSAGE_GU[:win] then break
-      when USER_ANSWER[:no_hints] then   @messages.answer_for_user(I18n.t(USER_ANSWER[:no_hints]))
+      when USER_ANSWER[:no_hints]
+        @messages.answer_for_user(I18n.t(USER_ANSWER[:no_hints]))
       when Integer
         send_to_user = I18n.t(USER_ANSWER[:hint_is], hint: @game_status)
         @messages.answer_for_user(send_to_user)
@@ -38,7 +39,17 @@ class Console_game
     @messages.game_over(@game.secret_code, statistics, @game_status)
   end
 
+  def guess_result
+    valid_input = input_handle
+    if valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints] || valid_input.nil?
+      return valid_input
+    else
+      @game.compare(valid_input)
+    end
+  end
+
   private
+
 
   def statistics
     attempts_used = @current_attempt - 1
@@ -51,44 +62,29 @@ class Console_game
       "hints_used": hints_used }
   end
 
-  def guess_result
-    valid_input = input_handle
-    #binding.pry
-    if valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints] || valid_input == nil
-      return valid_input
-    else
-      @game.compare(valid_input)
-    end
-  end
-
   def user_input
     @messages.question { I18n.t(USER_ANSWER[:attempt]) }
   end
 
+  def input_validate(input)
+    if errors_array_guess(input, (DIGIT..DIGIT))
+      input
+    else
+      user_input
+    end
+  end
+
   def input_handle
-    loop do
-      input = user_input
-      case input
-      when 'hint'
-        case @current_hint
-        when ZERO
-          return USER_ANSWER[:no_hints]
-          next
-        when 1..@difficulty[:difficulty][:hints].to_i
-          return view_hint(@current_hint)
-          next
+    input = user_input
+    case input
+    when 'hint'
+      case @current_hint
+      when ZERO then USER_ANSWER[:no_hints]
+      when 1..@difficulty[:difficulty][:hints].to_i then view_hint(@current_hint)
         end
-      when 'exit'
-        @messages.goodbye
-        break
-      else
-        if errors_array_guess(input, (DIGIT..DIGIT))
-          return input
-          #break
-        else
-          next
-        end
-      end
+    when 'exit' then @messages.goodbye
+    else
+      input_validate(input)
     end
   end
 

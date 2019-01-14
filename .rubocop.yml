@@ -1,8 +1,8 @@
 require: rubocop-rspec
 
 RSpec.Metrics/LineLength:
-      #Max: 120
-      Enabled: false
+      Max: 120
+      Enabled: true
 
 RSpec/MessageSpies:
   Enabled: false
@@ -13,16 +13,14 @@ Metrics/BlockLength:
 Metrics/LineLength:
   Max: 100
 
-
-
 Metrics/MethodLength:
   Max: 15
 
 Metrics/AbcSize:
-  Max: 15
+  Max: 18
 
 Metrics/CyclomaticComplexity:
-  Max: 7
+  Max: 6
 
 
 Style/Documentation:

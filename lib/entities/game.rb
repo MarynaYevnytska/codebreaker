@@ -1,8 +1,8 @@
 NUM_RANGE = 6
 DIGIT = 4
-MESSAGE_GU = { "attempt": 'user_answer',
-               "nil": 'nil',
-               "win": '++++', "failure": 'failure' }.freeze
+# MESSAGE_GU = { "attempt": 'user_answer',
+#               "nil": 'nil',
+#               "win": '++++', "failure": 'failure' }.freeze
 PLUS = '+'.freeze
 MINUS = '-'.freeze
 

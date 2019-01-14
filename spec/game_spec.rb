@@ -1,13 +1,3 @@
-DIFF = { "easy": { "name": 'Easy',
-                   "difficulty": { "hints": 2, "attempts": 15 } },
-         "medium": { "name": 'Medium',
-                     "difficulty": { "hints": 1, "attempts": 10 } },
-         "hell": { "name": 'Hell',
-                   "difficulty": { "hints": 1, "attempts": 5 } } }.freeze
-HINT = DIFF[:easy][:difficulty][:hints]
-DIGIT = 4
-NUMBER = '1' * DIGIT # 1111
-NUM_RANGE = 6
 
 RSpec.describe Game do
   let!(:game) { described_class.new(DIFF[:easy]) }
@@ -51,37 +41,7 @@ RSpec.describe Game do
   end
 
   context 'when the method plus-minus factoring output correct value' do
-    [
-      [[6, 5, 4, 1], [6, 5, 4, 1], '++++'],
-      [[1, 2, 3, 4], [4, 3, 4, 3], '--'],
-      [[1, 2, 3, 4], [2, 4, 3, 1], '+---'],
-      [[1, 5, 3, 2], [5, 1, 3, 2], '++--'],
-      [[1, 2, 3, 4], [1, 3, 2, 4], '++--'],
-      [[1, 2, 3, 4], [1, 2, 4, 3], '++--'],
-      [[1, 2, 3, 4], [1, 4, 2, 3], '+---'],
-      [[1, 2, 3, 4], [4, 2, 1, 3], '+---'],
-      [[1, 2, 3, 4], [2, 3, 1, 4], '+---'],
-      [[1, 2, 3, 4], [4, 3, 2, 1], '----'],
-      [[5, 4, 3, 2], [2, 3, 4, 5], '----'],
-      [[1, 2, 3, 4], [2, 1, 4, 3], '----'],
-      [[1, 3, 4, 2], [1, 2, 3, 4], '+---'],
-      [[5, 2, 5, 5], [2, 5, 5, 5], '++--'],
-      [[5, 5, 2, 5], [2, 5, 5, 5], '++--'],
-      [[5, 5, 5, 2], [2, 5, 5, 5], '++--'],
-      [[6, 2, 6, 2], [2, 6, 2, 6], '----'],
-      [[6, 6, 2, 2], [2, 6, 2, 6], '++--'],
-      [[2, 2, 6, 6], [2, 6, 2, 6], '++--'],
-      [[2, 6, 6, 2], [2, 6, 2, 6], '++--'],
-      [[6, 2, 2, 6], [2, 6, 2, 6], '++--'],
-      [[3, 1, 3, 5], [3, 3, 1, 5], '++--'],
-      [[3, 5, 1, 3], [3, 3, 1, 5], '++--'],
-      [[3, 3, 5, 1], [3, 3, 1, 5], '++--'],
-      [[1, 3, 5, 3], [3, 3, 1, 5], '+---'],
-      [[5, 3, 1, 3], [3, 3, 1, 5], '++--'],
-      [[1, 5, 3, 3], [3, 3, 1, 5], '----'],
-      [[5, 3, 3, 1], [3, 3, 1, 5], '+---']
-
-    ].each do |item|
+    YAML.load_file('./spec/fixtures/game_test_data.yml').each do |item|
       it "when secret_code is #{item[0]} && the user input is #{item[1]}, the responds to consol will be #{item[2]}" do
         game.instance_variable_set(:@secret_code, item[0].join.chars)
         expect(game.compare(item[1].join)).to eq(item[2])

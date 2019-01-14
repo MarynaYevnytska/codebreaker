@@ -1,14 +1,6 @@
-DIFF = { "easy": { "name": 'Easy',
-                   "difficulty": { "hints": 2, "attempts": 15 } },
-         "medium": { "name": 'Medium',
-                     "difficulty": { "hints": 1, "attempts": 10 } },
-         "hell": { "name": 'Hell',
-                   "difficulty": { "hints": 1, "attempts": 5 } } }.freeze
 HINT = DIFF[:easy][:difficulty][:hints]
-DIGIT = 4
 NUMBER = '1' * DIGIT # 1111
 ATTEMPTS = (1..15).freeze
-ZERO = 0
 WIN = 'win'.freeze
 RSpec.describe Console_game do
   let!(:console_game) { described_class.new('Maryna', DIFF[:easy]) }
@@ -42,26 +34,40 @@ RSpec.describe Console_game do
     end
   end
 
-  context 'when user input is number', positive: true do
+  it 'when loop-while testing hint-integer' do
+    allow(console_game).to receive(:guess_result).once.and_return(1)
+    expect(console).to receive(:guess_result).once
+    console_game.game_progress
+  end
+  it 'when loop-while testing no hint' do
+    allow(console_game).to receive(:guess_result).once.and_return(USER_ANSWER[:no_hints])
+    expect(console).to receive(:guess_result).once
+    console_game.game_progress
+  end
+
+  context 'when user input is NUMBER', positive: true do
     before do
       allow_any_instance_of(Console).to receive(:question).and_return(NUMBER)
     end
-
     it 'when user won the game and calls game_over with secret code, statistics and status' do
       allow_any_instance_of(Game).to receive(:compare).and_return('win')
       expect(messages).to receive(:game_over).with(kind_of(Array), { attempts_total: 15, attempts_used: 15, difficulty: 'Easy', hints_total: 2, hints_used: 0, user_name: 'Maryna' }, 'win')
       console_game.game_progress
     end
     it 'when computer won the guess and game continue' do
-       allow_any_instance_of(Game).to receive(:compare).and_return('++--')
-       expect(messages).to receive(:answer_for_user).with('++--').once
-       console_game.game_progress
+      allow_any_instance_of(Game).to receive(:compare).and_return('++--')
+      expect(messages).to receive(:answer_for_user).with('++--').once
+      console_game.game_progress
     end
     it 'when attempt was used if user input is number ' do
       allow_any_instance_of(Game).to receive(:compare).and_return('++--')
-      expect { game.compare(NUMBER) }.to change(console_game, :current_attempt).by(-1)
+      expect { game.compare(NUMBER) }.to change(console_game, :current_attempt).by(+1)
+      console_game.game_progress
     end
     it 'when attemts сame  to end and game over' do
+      allow_any_instance_of(Game).to receive(:compare).and_return('++--')
+      console_game.instance_variable_set(:@current_attempt, DIFF[:easy][:attempt])
+      expect(messages).to receive(:game_over).with(kind_of(Array), { attempts_total: 15, attempts_used: 15, difficulty: 'Easy', hints_total: 2, hints_used: 0, user_name: 'Maryna' }, 'failure')
     end
   end
 
@@ -71,16 +77,15 @@ RSpec.describe Console_game do
     end
 
     it 'when user want to get hint and  hints are available' do
-      console_game.instance_variable_set(:@current_hint, 1)
       allow_any_instance_of(Game).to receive(:hint).and_return(1)
-      expect(messages).to receive(:answer_for_user).once
+      expect(messages).to receive(:answer_for_user).with(I18n.t(USER_ANSWER[:hint_is], hint: 1)).once
       console_game.game_progress
     end
     it 'when user want to get hint but all the hints was used' do
-        console_game.instance_variable_set(:@current_hint, 0)
-        allow_any_instance_of(Console).to receive(:question).and_return('hint')
-        expect(STDOUT).to receive(:puts).with(I18n.t(USER_ANSWER[:no_hints]))
-        console_game.game_progress
+      console_game.instance_variable_set(:@current_hint, 0)
+      allow_any_instance_of(Console).to receive(:question).and_return('hint')
+      expect(STDOUT).to receive(:puts).with(I18n.t(USER_ANSWER[:no_hints]))
+      console_game.game_progress
     end
     it 'when guess wasn`t used if user input is hint ' do
       expect { game.compare }.to change(console_game, :current_attempt).by(0)
@@ -89,6 +94,7 @@ RSpec.describe Console_game do
       expect { game.compare }.to change(console_game, :current_hints).by(-1)
     end
   end
+
   it 'when user want to exit and press `exit`' do
     allow_any_instance_of(Console).to receive(:question).and_return('exit')
     expect(messages).to receive(:goodbye).once

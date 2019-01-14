@@ -48,33 +48,32 @@ class Console
   end
 
   def goodbye
-    puts 'exit'.chomp
+    puts 'exit'
   end
 
   def start
     Console_game.new(name, difficulty).game_progress
   end
 
+  def first_choice
+    case question { I18n.t(MENU[:continue?]) }
+    when MENU[:no] then goodbye
+    when MENU[:yes] then choice
+    else
+      puts I18n.t(MENU[:wrong_choice])
+      first_choice
+    end
+  end
+
   def choice
-    puts I18n.t(MENU[:continue?])
-    loop do
-      case question {}
-      when MENU[:yes] then
-        puts I18n.t(MENU[:choose_the_command])
-        next
-      when MENU[:no]
-        goodbye
-        break
-      when MENU[:exit]
-        goodbye
-        break
-      when MENU[:game_rules] then return rules
-      when MENU[:stats] then return stats
-      when MENU[:game_start] then start
-      else
-        puts I18n.t(MENU[:wrong_choice])
-        next
-      end
+    case question { I18n.t(MENU[:choose_the_command]) }
+    when MENU[:exit] then goodbye
+    when MENU[:game_rules] then rules
+    when MENU[:stats] then stats
+    when MENU[:game_start] then start
+    else
+      puts I18n.t(MENU[:wrong_choice])
+      choice
     end
   end
 
@@ -82,7 +81,7 @@ class Console
 
   def rules
     puts I18n.t(MENU[:game_rules])
-    choice
+    first_choice
   end
 
   def print_statistic
@@ -95,7 +94,7 @@ class Console
 
   def stats
     print_statistic
-    choice
+    first_choice
   end
 
   def name_call
@@ -104,37 +103,24 @@ class Console
   end
 
   def validate_name
-    loop do
-      name = name_call
-      if errors_array_string(name, NAME_RANGE)
-        return name
-        break
-      end
+    name = name_call
+    if errors_array_string(name, NAME_RANGE)
+      name
+    else
+      validate_name
     end
   end
 
   def difficulty
     puts I18n.t(MENU[:describe_diff])
-    loop do
-      case question { I18n.t(MENU[:user_answer]) }.capitalize
-      when DIFF[:easy][:name]
-
-        return DIFF[:easy]
-        break
-
-      when DIFF[:medium][:name]
-
-        return DIFF[:medium]
-        break
-
-      when DIFF[:hell][:name]
-
-        return DIFF[:hell]
-        break
-      else
-        puts I18n.t(MENU[:wrong_choice])
-        next
-      end
+    difficulty_value = question { I18n.t(MENU[:user_answer]) }.capitalize
+    case difficulty_value
+    when DIFF[:easy][:name] then DIFF[:easy]
+    when DIFF[:medium][:name] then DIFF[:medium]
+    when DIFF[:hell][:name] then DIFF[:hell]
+    else
+      puts I18n.t(MENU[:wrong_choice])
+      difficulty
     end
   end
 
@@ -142,20 +128,17 @@ class Console
     validate_name.capitalize
   end
 
-  def save?(_game_statistics)
-    save(_game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
+  def save?(game_statistics)
+    save(game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
   end
 
   def start?
-    loop do
-      case question { I18n.t(MENU[:restart?]) }
-      when MENU[:yes]
-        choice
-        break
-      when MENU[:no]
-        goodbye
-        break
-      end
+    case question { I18n.t(MENU[:restart?]) }
+    when MENU[:yes] then choice
+    when MENU[:no] then goodbye
+    else
+      puts I18n.t(MENU[:wrong_choice])
+      start?
     end
   end
 end
