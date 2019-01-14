@@ -41,8 +41,8 @@ class Console_game
 
   def guess_result
     valid_input = input_handle
-    if valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints] || valid_input.nil?
-      return valid_input
+    if valid_boolean(valid_input)
+       valid_input
     else
       @game.compare(valid_input)
     end
@@ -50,6 +50,9 @@ class Console_game
 
   private
 
+def valid_boolean(valid_input)
+  valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints] || valid_input.nil?
+end
 
   def statistics
     attempts_used = @current_attempt - 1
