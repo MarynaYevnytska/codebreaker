@@ -1,5 +1,6 @@
 
 RSpec.describe Load do
+
   let(:dummy_class) { Class.new { extend Load } }
   let(:list) { dummy_class.load_documents(Storage_constants::FILE_NAME_ST) }
   let(:rating) { dummy_class.rating(list) }
@@ -45,6 +46,33 @@ RSpec.describe Load do
       end
       it 'when each item of storage after union by rating is exit' do
         expect(rating).to all(be_instance_of(Hash))
+      end
+      it 'when each item of storage after union by rating is exit' do
+        expect(rating).to all(be_instance_of(Hash))
+      end
+      it 'when each 1 item of storage after union by rating is exit' do
+        #expect(rating).to all(be_instance_of(Hash))
+      end
+      it 'when each 2 item of storage after union by rating is exit' do
+        #expect(rating).to all(be_instance_of(Hash))
+      end
+      it 'when each 3 item of storage after union by rating is exit' do
+        #expect(rating).to all(be_instance_of(Hash))
+      end
+      it 'when each 4 item of storage after union by rating is exit' do
+        #expect(rating).to all(be_instance_of(Hash))
+      end
+      it 'when each 5 item of storage after union by rating is exit' do
+        #expect(rating).to all(be_instance_of(Hash))
+      end
+      it 'when each 6 item of storage after union by rating is exit' do
+        #expect(rating).to all(be_instance_of(Hash))
+      end
+      it 'when each 7 item of storage after union by rating is exit' do
+        #expect(rating).to all(be_instance_of(Hash))
+      end
+      it 'when each 8 item of storage after union by rating is exit' do
+        #expect(rating).to all(be_instance_of(Hash))
       end
     end
   end

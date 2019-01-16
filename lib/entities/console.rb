@@ -53,11 +53,12 @@ class Console
       input = question { I18n.t(MENU[:choose_the_command]) }
       case input
       when MENU[:exit] then goodbye
-      when MENU[:game_rules] then rules
-      when MENU[:stats] then stats #binding.pry
+      when MENU[:game_rules] then rules #binding.pry
+      when MENU[:stats] then stats
       when MENU[:game_start] then start
       else
-        puts I18n.t(MENU[:wrong_choice]) #binding.pry
+
+        puts I18n.t(MENU[:wrong_choice])
     end
     end
   end
