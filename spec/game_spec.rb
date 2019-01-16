@@ -1,4 +1,3 @@
-
 RSpec.describe Game do
   let!(:game) { described_class.new(DIFF[:easy]) }
   let(:console_game) { Console_game.new('Maryna', DIFF[:easy]) }
@@ -28,7 +27,7 @@ RSpec.describe Game do
     end
 
     it 'when the sequence of `secret_code` is not same as `hint_clone_scode`  at the start', positive: true do
-      expect(game.hint_clone_scode!=game.secret_code).to eq(true)
+      expect(game.hint_clone_scode != game.secret_code).to eq(true)
     end
   end
 

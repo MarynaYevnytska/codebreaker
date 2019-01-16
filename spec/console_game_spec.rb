@@ -49,6 +49,7 @@ RSpec.describe Console_game do
     before do
       allow_any_instance_of(Console).to receive(:question).and_return(NUMBER)
     end
+
     it 'when user won the game and calls game_over with secret code, statistics and status' do
       allow_any_instance_of(Game).to receive(:compare).and_return('win')
       expect(messages).to receive(:game_over).with(kind_of(Array), { attempts_total: 15, attempts_used: 15, difficulty: 'Easy', hints_total: 2, hints_used: 0, user_name: 'Maryna' }, 'win')

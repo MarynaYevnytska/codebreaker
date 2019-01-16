@@ -48,11 +48,11 @@ class Console
   end
 
   def goodbye
-    puts 'exit'
+    puts "exit\n"
   end
 
   def start
-    Console_game.new(name, difficulty).game_progress
+    Console_game.new(name, difficulty_choice).game_progress
   end
 
   def first_choice
@@ -65,15 +65,17 @@ class Console
     end
   end
 
-  def choice
-    case question { I18n.t(MENU[:choose_the_command]) }
-    when MENU[:exit] then goodbye
-    when MENU[:game_rules] then rules
-    when MENU[:stats] then stats
-    when MENU[:game_start] then start
-    else
-      puts I18n.t(MENU[:wrong_choice])
-      choice
+  def choice(input = 'yes')
+    while input != MENU[:exit]
+      input = question { I18n.t(MENU[:choose_the_command]) }
+      case input
+      when MENU[:exit] then goodbye
+      when MENU[:game_rules] then rules
+      when MENU[:stats] then stats
+      when MENU[:game_start] then start
+      else
+        puts I18n.t(MENU[:wrong_choice])
+    end
     end
   end
 
@@ -111,16 +113,21 @@ class Console
     end
   end
 
-  def difficulty
+  def difficulty_choice
     puts I18n.t(MENU[:describe_diff])
-    difficulty_value = question { I18n.t(MENU[:user_answer]) }.capitalize
-    case difficulty_value
+    @difficulty_value = question { I18n.t(MENU[:user_answer]) }
+    until DIFF.key?(@difficulty_value.to_sym)
+      puts I18n.t(MENU[:wrong_choice])
+      @difficulty_value = question { I18n.t(MENU[:user_answer]) }
+    end
+    difficulty
+  end
+
+  def difficulty
+    case @difficulty_value.capitalize
     when DIFF[:easy][:name] then DIFF[:easy]
     when DIFF[:medium][:name] then DIFF[:medium]
     when DIFF[:hell][:name] then DIFF[:hell]
-    else
-      puts I18n.t(MENU[:wrong_choice])
-      difficulty
     end
   end
 

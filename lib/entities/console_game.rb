@@ -22,7 +22,7 @@ class Console_game
     @current_hint = @difficulty[:difficulty][:hints].to_i
     @current_attempt = 1
     range = 1..@difficulty[:difficulty][:attempts].to_i
-      while range.cover?(@current_attempt)
+    while range.cover?(@current_attempt)
       @game_status = guess_result
       case @game_status
       when MESSAGE_GU[:win] then break
@@ -35,14 +35,14 @@ class Console_game
         @messages.answer_for_user(@game_status)
         @current_attempt += 1
       end
-    end
+  end
     @messages.game_over(@game.secret_code, statistics, @game_status)
   end
 
   def guess_result
     valid_input = input_handle
     if valid_boolean(valid_input)
-       valid_input
+      valid_input
     else
       @game.compare(valid_input)
     end
@@ -50,9 +50,9 @@ class Console_game
 
   private
 
-def valid_boolean(valid_input)
-  valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints] || valid_input.nil?
-end
+  def valid_boolean(valid_input)
+    valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints] || valid_input.nil?
+  end
 
   def statistics
     attempts_used = @current_attempt - 1
