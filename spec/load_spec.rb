@@ -1,11 +1,12 @@
+
 RSpec.describe Load do
   let(:dummy_class) { Class.new { extend Load } }
-  let(:list) { dummy_class.load_documents(FILE_NAME_ST) }
+  let(:list) { dummy_class.load_documents(Storage_constants::FILE_NAME_ST) }
   let(:rating) { dummy_class.rating(list) }
 
   it 'when use `load_documents` ' do
     stub_const('FILE_NAME_ST', './spec/fixtures/stat.yml')
-    expect(dummy_class.load_documents(FILE_NAME_ST)).to be_instance_of(Array)
+    expect(dummy_class.load_documents(Storage_constants::FILE_NAME_ST)).to be_instance_of(Array)
   end
   context 'when storage is sorting' do
     before do
@@ -36,7 +37,7 @@ RSpec.describe Load do
       expect(dummy_class.sorted(list)).to be_instance_of(Hash)
     end
     it 'when storage is sorted by used attemts && by used hints && grupped by difficulty' do
-      expect((1..DIFF.keys.size).cover?(dummy_class.sorted(list).keys.size)).to eq(true)
+      expect((1..Storage_constants::DIFF.keys.size).cover?(dummy_class.sorted(list).keys.size)).to eq(true)
     end
     context 'when storage unions by rating' do
       it 'when storage befor union by rating is exist' do

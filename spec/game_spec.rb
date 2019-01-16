@@ -1,6 +1,7 @@
 RSpec.describe Game do
-  let!(:game) { described_class.new(DIFF[:easy]) }
-  let(:console_game) { Console_game.new('Maryna', DIFF[:easy]) }
+
+  let!(:game) { described_class.new(Storage_constants::DIFF[:easy])}
+  let(:console_game) { Console_game.new('Maryna', Storage_constants::DIFF[:easy]) }
   let!(:difficulty) { game.difficulty }
   let!(:secret_code) { game.secret_code }
   let!(:hint_clone_scode) { game.hint_clone_scode }
@@ -19,7 +20,7 @@ RSpec.describe Game do
     end
 
     it 'when the digit of `secret_code` is correct', positive: true do
-      expect(secret_code.size).to eq(DIGIT)
+      expect(secret_code.size).to eq(Storage_constants::DIGIT)
     end
 
     it 'when the digit of `secret_code` equal `hint_clone_scode` at the start', positive: true do
@@ -35,7 +36,7 @@ RSpec.describe Game do
     it 'when secret code equles user input, return game status `win`' do
       user_input = secret_code.join
       game.compare(user_input)
-      expect(game.compare(user_input)).to eq(MESSAGE_GU[:win])
+      expect(game.compare(user_input)).to eq(Storage_constants::MESSAGE_GU[:win])
     end
   end
 

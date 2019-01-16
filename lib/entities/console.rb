@@ -1,27 +1,8 @@
-FILE_NAME_ST = './stat.yml'.freeze
-NAME_RANGE = (3..20).freeze
-DIFF = { "easy": { "name": 'Easy',
-                   "difficulty": { "hints": 2, "attempts": 15 } },
-         "medium": { "name": 'Medium',
-                     "difficulty": { "hints": 1, "attempts": 10 } },
-         "hell": { "name": 'Hell',
-                   "difficulty": { "hints": 1, "attempts": 5 } } }.freeze
-
-MENU = { "choose_the_command": 'choose_the_command',
-         "yes": 'y', "no": 'n',
-         "game_rules": 'rules',
-         "stats": 'stats', "game_start": 'start',
-         "goodbye": 'goodbye', "exit": 'exit',
-         "describe_diff": 'difficult', "user_answer": 'user_answer',
-         "wrong_choice": 'wrong_choice', "name": 'name',
-         "win": 'win', "failure": 'failure',
-         "restart?": 'restart?', "save?": 'save?',
-         "statistics": 'statistics', "game_attemt": 'game_attemt',
-         "game_hint": 'game_hint', "continue?": 'continue?' }.freeze
 
 class Console
   include Load
   include Validate
+  include Storage_constants
 
   def initialize(send_to_console = 'greeting')
     print I18n.t(send_to_console)
@@ -73,10 +54,10 @@ class Console
       case input
       when MENU[:exit] then goodbye
       when MENU[:game_rules] then rules
-      when MENU[:stats] then stats
+      when MENU[:stats] then stats #binding.pry
       when MENU[:game_start] then start
       else
-        puts I18n.t(MENU[:wrong_choice])
+        puts I18n.t(MENU[:wrong_choice]) #binding.pry
     end
     end
   end

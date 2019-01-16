@@ -1,12 +1,7 @@
-NUM_RANGE = 6
-DIGIT = 4
-# MESSAGE_GU = { "attempt": 'user_answer',
-#               "nil": 'nil',
-#               "win": '++++', "failure": 'failure' }.freeze
-PLUS = '+'.freeze
-MINUS = '-'.freeze
 
 class Game
+  include Storage_constants
+
   attr_reader :difficulty, :secret_code
   attr_accessor :hint_clone_scode
 

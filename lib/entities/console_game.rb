@@ -1,13 +1,7 @@
 # frozen_string_literal: true
-
-MESSAGE_GU = { "attempt": 'user_answer',
-               "nil": 'nil',
-               "win": '++++', "failure": 'failure' }.freeze
-MESSAGE_FOR_USER = { "start_game": 'guess', "failure": 'failure' }.freeze
-USER_ANSWER = { "attempt": 'user_answer', "no_hints": 'no_hints', "hint_is": 'hint_is' }.freeze
-ZERO = 0
 class Console_game
   include Validate
+  include Storage_constants
 
   attr_reader :name, :difficulty
   attr_accessor :messages, :game, :current_hint, :current_attempt, :game_status
@@ -26,6 +20,7 @@ class Console_game
       @game_status = guess_result
       case @game_status
       when MESSAGE_GU[:win] then break
+
       when USER_ANSWER[:no_hints]
         @messages.answer_for_user(I18n.t(USER_ANSWER[:no_hints]))
       when Integer
