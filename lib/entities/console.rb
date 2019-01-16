@@ -48,20 +48,22 @@ class Console
   end
 
   def goodbye
-    puts "exit\n"
+    abort 'Goodbye'
   end
 
   def start
     Console_game.new(name, difficulty_choice).game_progress
   end
 
-  def first_choice
-    case question { I18n.t(MENU[:continue?]) }
-    when MENU[:no] then goodbye
-    when MENU[:yes] then choice
-    else
-      puts I18n.t(MENU[:wrong_choice])
-      first_choice
+  def first_choice(input = 'start')
+    while input != MENU[:no] || input != MENU[:yes]
+      input = question { I18n.t(MENU[:continue?]) }
+      case input
+      when MENU[:no] then goodbye
+      when MENU[:yes] then choice
+      else
+        puts I18n.t(MENU[:wrong_choice])
+      end
     end
   end
 
