@@ -5,13 +5,30 @@ RSpec.describe Load do
   let(:list) { dummy_class.load_documents(Storage_constants::FILE_NAME_ST) }
   let(:rating) { dummy_class.rating(list) }
 
+
   it 'when use `load_documents` ' do
     stub_const('FILE_NAME_ST', './spec/fixtures/stat.yml')
     expect(dummy_class.load_documents(Storage_constants::FILE_NAME_ST)).to be_instance_of(Array)
   end
+  it 'when use `load_documents` ' do
+    stub_const('FILE_NAME_ST', './spec/fixtures/stat.yml')
+    expect(dummy_class.load_statistics(Storage_constants::FILE_NAME_ST)).to be_instance_of(Array)
+  end
+  it 'when use `load_documents` ' do
+    stub_const('FILE_NAME_ST', './spec/fixtures/stat.yml')
+    expect(dummy_class.load_statistics(Storage_constants::FILE_NAME_ST).empty?).to eq(false)
+  end
   context 'when storage is sorting' do
     before do
       stub_const('FILE_NAME_ST', './spec/fixtures/stat.yml')
+    end
+    it '#save' do
+      @buffer = StringIO.new()
+      @filename = FILE_NAME_ST
+      @content = "the content fo the file"
+      allow(File).to receive(:open).with(@filename,'w').and_yield( @buffer )
+      File.open(@filename, 'w') {|f| f.write(@content)}
+      expect(@buffer.string).to eq(@content)
     end
 
     it 'when storage is sorted by used attemts data type is correct' do
@@ -44,35 +61,11 @@ RSpec.describe Load do
       it 'when storage befor union by rating is exist' do
         expect(dummy_class.rating(list)).to be_instance_of(Array)
       end
-      it 'when each item of storage after union by rating is exit' do
-        expect(rating).to all(be_instance_of(Hash))
+      it 'when storage befor union by rating is exist' do
+        expect(dummy_class.rating(list).empty?).to eq(false)
       end
       it 'when each item of storage after union by rating is exit' do
         expect(rating).to all(be_instance_of(Hash))
-      end
-      it 'when each 1 item of storage after union by rating is exit' do
-        #expect(rating).to all(be_instance_of(Hash))
-      end
-      it 'when each 2 item of storage after union by rating is exit' do
-        #expect(rating).to all(be_instance_of(Hash))
-      end
-      it 'when each 3 item of storage after union by rating is exit' do
-        #expect(rating).to all(be_instance_of(Hash))
-      end
-      it 'when each 4 item of storage after union by rating is exit' do
-        #expect(rating).to all(be_instance_of(Hash))
-      end
-      it 'when each 5 item of storage after union by rating is exit' do
-        #expect(rating).to all(be_instance_of(Hash))
-      end
-      it 'when each 6 item of storage after union by rating is exit' do
-        #expect(rating).to all(be_instance_of(Hash))
-      end
-      it 'when each 7 item of storage after union by rating is exit' do
-        #expect(rating).to all(be_instance_of(Hash))
-      end
-      it 'when each 8 item of storage after union by rating is exit' do
-        #expect(rating).to all(be_instance_of(Hash))
       end
     end
   end
