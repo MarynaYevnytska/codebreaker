@@ -24,8 +24,7 @@ class Console
     when 'failure' then puts I18n.t(MENU[:failure])
     end
     save?(_game_statistics)
-    start?
-    goodbye
+    first_choice
   end
 
   def goodbye
@@ -123,13 +122,4 @@ class Console
     save(game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
   end
 
-  def start?
-    case question { I18n.t(MENU[:restart?]) }
-    when MENU[:yes] then choice
-    when MENU[:no] then goodbye
-    else
-      puts I18n.t(MENU[:wrong_choice])
-      start?
-    end
-  end
 end

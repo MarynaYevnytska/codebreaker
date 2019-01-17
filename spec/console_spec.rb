@@ -1,12 +1,63 @@
 RSpec.describe Console do
 
   let!(:console) { described_class.new }
+  let!(:console_game) { Console_game.new('Maryna', Storage_constants::DIFF[:easy]) }
   context 'when gem run user see greeting message' do
     specify { expect { described_class.new }.to output(print(I18n.t('greeting'))).to_stdout }
   end
+  it 'when user get answer to console' do
+    allow(console).to receive(:answer_for_user).with('anything').once
+    expect(STDOUT).to receive(:puts).with('anything').once
+  end
+  it 'when user get message and should input  answer  to console' do
+    expect(STDOUT).to receive(:print ).with("anything?")
+    allow(STDIN).to receive(:gets) { 'joe' }
+    expect(console.question).to eq 'Joe'
+  end
+  it 'when user get message and should input  answer  to console' do
+    allow(console).to receive(:question).with('anything').once
+    expect(STDOUT).to receive(:print ).with("anything?")
+  end
+  context 'whe game over' do
+    before(:each) do
+      @s_code=[1,1,1,1]
+      @game_statistics = instatnce_of_(Hash)
+      allow(console).to receive(:game_over).with(@s_code, @game_statistics)
+    end
+    it 'when user watch message about game over ' do
+      expect(STDOUT).to receive(:print ).with("Secret code is #{s_code.join}")
+      console.game_over(@s_code, @game_statistics)
+    end
+    it 'when user watch message about game over with status 'win'' do
+            @game_status = 'win'
+      expect(STDOUT).to receive(:print ).with("Secret code is #{s_code.join}")
+      console.game_over(@s_code, @game_statistics)
+    end
+  end
 
+context 'when user choosen game start and  press `start`' do
+    before (:each) do
+    allow(console).to receive(:first_choice).and_return(Storage_constants::MENU[:yes])
+    allow(console).to receive(:question).and_return(Storage_constants::MENU[:start]).once
+    end
+    it 'when  method call' do
+    expect(console).to receive(:start).once
+    console.choice
+    end
+    it 'when insatance of game was created and name write down' do
+    expect(console).to receive(:name).once
+    console.start
+    end
+    it 'when insatance of game was created and name write down' do
+    expect(console).to receive(:difficulty_choice).once
+    console.start
+    end
+    it 'when insatance of game was created and name write down' do
+    expect(console_game).to receive(:game_progress).once
+    console.start
+    end
+end
   context 'when an user input is valid' do
-
     it 'when user want to view statistics and press `stats`', positive: true do
       allow(console).to receive(:first_choice).and_return(Storage_constants::MENU[:yes])
       allow(console).to receive(:question).and_return(Storage_constants::MENU[:stats]).once
