@@ -67,4 +67,14 @@ RSpec.describe Validate do
       expect(user_input).to eq(false)
     end
   end
+  context 'when an user inputted NUMBER' do
+    it 'when an user input of number is CORRECT', negative: true do
+      user_input = dummy_class.errors_array_guess(Storage_constants::NUMBER, Storage_constants::DIGIT..Storage_constants::DIGIT)
+      expect(user_input).not_to eq(false)
+    end
+    it 'when an user input of number is INCORRECT', negative: true do
+      user_input = dummy_class.errors_array_guess(Storage_constants::NUMBER_UP, Storage_constants::DIGIT..Storage_constants::DIGIT)
+      expect(user_input).to eq(false)
+    end
+  end
 end
