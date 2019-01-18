@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Load
   def save(object, file_path)
     File.new(file_path, 'w+') unless File.exist?(file_path)

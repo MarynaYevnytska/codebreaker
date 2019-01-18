@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+NUM_RANGE = 6
+PLUS = '+'
+MINUS = '-'
 
 class Game
-  include Storage_constants
 
   attr_reader :difficulty, :secret_code
   attr_accessor :hint_clone_scode
@@ -8,7 +11,6 @@ class Game
   def initialize(difficulty)
     @difficulty = difficulty
     @secret_code = create_secret_code
-    @hint_clone_scode = @secret_code.shuffle
   end
 
   def compare(user_input)
@@ -29,7 +31,7 @@ class Game
   private
 
   def create_secret_code
-    Array.new(DIGIT).map! { |_number| rand(NUM_RANGE).to_s }
+    Array.new(ConsoleGame::DIGIT).map! { |_number| rand(NUM_RANGE).to_s }
   end
 
   def plus_factor(user_input)
@@ -66,4 +68,5 @@ class Game
     minus_factor
     @answer_plus.push(@answer_minus).join
   end
+
 end

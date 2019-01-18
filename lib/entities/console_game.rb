@@ -1,8 +1,13 @@
 # frozen_string_literal: true
-class Console_game
-  include Validate
-  include Storage_constants
+MESSAGE_GU = { "attempt": 'user_answer',
+               "nil": 'nil',
+               "win": '++++', "failure": 'failure' }.freeze
+USER_ANSWER = { "attempt": 'user_answer', "no_hints": 'no_hints', "hint_is": 'hint_is' }.freeze
+MESSAGE_FOR_USER = { "start_game": 'guess', "failure": 'failure' }.freeze
+DIGIT = 4
 
+class ConsoleGame
+  include Validate
   attr_reader :name, :difficulty
   attr_accessor :messages, :game, :current_hint, :current_attempt, :game_status
   def initialize(name, difficulty)
@@ -19,18 +24,17 @@ class Console_game
     while range.cover?(@current_attempt)
       @game_status = guess_result
       case @game_status
-      when MESSAGE_GU[:win] then break
-
-      when USER_ANSWER[:no_hints]
+        when MESSAGE_GU[:win] then break
+        when USER_ANSWER[:no_hints]
         @messages.answer_for_user(I18n.t(USER_ANSWER[:no_hints]))
-      when Integer
+        when Integer
         send_to_user = I18n.t(USER_ANSWER[:hint_is], hint: @game_status)
         @messages.answer_for_user(send_to_user)
       else
         @messages.answer_for_user(@game_status)
         @current_attempt += 1
       end
-  end
+    end
     @messages.game_over(@game.secret_code, statistics, @game_status)
   end
 
@@ -75,12 +79,12 @@ class Console_game
   def input_handle
     input = user_input
     case input
-    when 'hint'
-      case @current_hint
-      when ZERO then USER_ANSWER[:no_hints]
-      when 1..@difficulty[:difficulty][:hints].to_i then view_hint(@current_hint)
+      when 'hint'
+        case @current_hint
+          when ZERO then USER_ANSWER[:no_hints]
+          when 1..@difficulty[:difficulty][:hints].to_i then view_hint(@current_hint)
         end
-    when 'exit' then @messages.goodbye
+      when 'exit' then @messages.goodbye
     else
       input_validate(input)
     end

@@ -1,8 +1,29 @@
+# frozen_string_literal: true
+MENU = { "choose_the_command": 'choose_the_command',
+         "yes": 'y', "no": 'n',
+         "game_rules": 'rules',
+         "stats": 'stats', "game_start": 'start',
+         "goodbye": 'goodbye', "exit": 'exit',
+         "describe_diff": 'difficult', "user_answer": 'user_answer',
+         "wrong_choice": 'wrong_choice', "name": 'name',
+         "win": 'win', "failure": 'failure',
+         "restart?": 'restart?', "save?": 'save?',
+         "statistics": 'statistics', "game_attemt": 'game_attemt',
+         "game_hint": 'game_hint', "continue?": 'continue?' }.freeze
+
+FILE_NAME_ST = './stat.yml'
+
+DIFF = { "easy": { "name": 'Easy',
+                   "difficulty": { "hints": 2, "attempts": 15 } },
+         "medium": { "name": 'Medium',
+                     "difficulty": { "hints": 1, "attempts": 10 } },
+         "hell": { "name": 'Hell',
+                   "difficulty": { "hints": 1, "attempts": 5 } } }.freeze
+NAME_RANGE = (3..20).freeze
 
 class Console
   include Load
   include Validate
-  include Storage_constants
 
   def initialize(send_to_console = 'greeting')
     print I18n.t(send_to_console)
@@ -20,8 +41,8 @@ class Console
   def game_over(s_code, _game_statistics, game_status = 'failure')
     puts "Secret code is #{s_code.join}"
     case game_status
-    when 'win' then puts I18n.t(MENU[:win])
-    when 'failure' then puts I18n.t(MENU[:failure])
+      when 'win' then puts I18n.t(MENU[:win])
+      when 'failure' then puts I18n.t(MENU[:failure])
     end
     save?(_game_statistics)
     first_choice
@@ -32,17 +53,17 @@ class Console
   end
 
   def start
-    Console_game.new(name, difficulty_choice).game_progress
+    ConsoleGame.new(name, difficulty_choice).game_progress
   end
 
   def first_choice(input = 'start')
     while input != MENU[:no] || input != MENU[:yes]
       input = question { I18n.t(MENU[:continue?]) }
       case input
-      when MENU[:no] then goodbye
-      when MENU[:yes] then choice
-      else
-        puts I18n.t(MENU[:wrong_choice])
+        when MENU[:no] then goodbye
+        when MENU[:yes] then choice
+        else
+          puts I18n.t(MENU[:wrong_choice])
       end
     end
   end
@@ -51,14 +72,13 @@ class Console
     while input != MENU[:exit]
       input = question { I18n.t(MENU[:choose_the_command]) }
       case input
-      when MENU[:exit] then goodbye
-      when MENU[:game_rules] then rules #binding.pry
-      when MENU[:stats] then stats
-      when MENU[:game_start] then start
-      else
-
+        when MENU[:exit] then goodbye
+        when MENU[:game_rules] then rules # binding.pry
+        when MENU[:stats] then stats
+        when MENU[:game_start] then start
+        else
         puts I18n.t(MENU[:wrong_choice])
-    end
+      end
     end
   end
 
@@ -83,7 +103,7 @@ class Console
   end
 
   def name_call
-    puts I18n.t(MENU[:name])
+    puts I18n.t(MENU[:name], min: NAME_RANGE.first, max: NAME_RANGE.last)
     question { I18n.t(MENU[:user_answer]) }
   end
 
@@ -108,18 +128,17 @@ class Console
 
   def difficulty
     case @difficulty_value.capitalize
-    when DIFF[:easy][:name] then DIFF[:easy]
-    when DIFF[:medium][:name] then DIFF[:medium]
-    when DIFF[:hell][:name] then DIFF[:hell]
+      when DIFF[:easy][:name] then DIFF[:easy]
+      when DIFF[:medium][:name] then DIFF[:medium]
+      when DIFF[:hell][:name] then DIFF[:hell]
     end
   end
 
   def name
     validate_name.capitalize
   end
-
+  
   def save?(game_statistics)
     save(game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
   end
-
 end

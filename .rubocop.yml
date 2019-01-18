@@ -17,10 +17,10 @@ Metrics/MethodLength:
   Max: 15
 
 Metrics/AbcSize:
-  Max: 18
+  Max: 15
 
-Metrics/CyclomaticComplexity:
-  Max: 6
+  Metrics/CyclomaticComplexity:
+    Max: 6
 
 
 Style/Documentation:

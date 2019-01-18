@@ -40,7 +40,7 @@ en:
   failure: "Sorry,computer has won the fight.Do you want to save the result of game? (y/n)"
   save?: 'Do you want to save the result of last game? (y/n)'
   restart?: 'Do you want to try again? (y/n)'
-  name: 'Name must be full string, which  min length - 3 symbols, max length - 20 symbols.'
+  name: 'Name must be full string, which  min length - %{min}  symbols, max length - %{max} symbols.'
   nil: "-----------------------------------------------------------------------------------\n"
   statistics:   " %{rating} \n
               Name: %{name} Difficulty: %{difficulty} \n
