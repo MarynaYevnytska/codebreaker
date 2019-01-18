@@ -1,13 +1,10 @@
 # frozen_string_literal: true
-
-MESSAGE_FOR_USER = { "start_game": 'guess', "failure": 'failure' }.freeze
-USER_ANSWER = { "attempt": 'user_answer', "no_hints": 'no_hints' }.freeze
-
 class Console_game
-  include Validation
+  include Validate
+  include Storage_constants
 
   attr_reader :name, :difficulty
-
+  attr_accessor :messages, :game, :current_hint, :current_attempt, :game_status
   def initialize(name, difficulty)
     @name = name
     @difficulty = difficulty
@@ -18,59 +15,80 @@ class Console_game
   def game_progress
     @current_hint = @difficulty[:difficulty][:hints].to_i
     @current_attempt = 1
-    while (0..@difficulty[:difficulty][:attempts].to_i).cover?(@current_attempt)
-      consol_response = @messages.question { I18n.t(USER_ANSWER[:attempt]) }
-      valid_consol_response = input_handle(consol_response, @current_hint)
-      @game_status = @game.compare(valid_consol_response)
-      @current_hint = @game.current_hint
-      break if @game_status == 'win'
+    range = 1..@difficulty[:difficulty][:attempts].to_i
+    while range.cover?(@current_attempt)
+      @game_status = guess_result
+      case @game_status
+      when MESSAGE_GU[:win] then break
 
-      @messages.answer_for_user(@game_status)
-      @current_attempt += 1
+      when USER_ANSWER[:no_hints]
+        @messages.answer_for_user(I18n.t(USER_ANSWER[:no_hints]))
+      when Integer
+        send_to_user = I18n.t(USER_ANSWER[:hint_is], hint: @game_status)
+        @messages.answer_for_user(send_to_user)
+      else
+        @messages.answer_for_user(@game_status)
+        @current_attempt += 1
+      end
+  end
+    @messages.game_over(@game.secret_code, statistics, @game_status)
   end
 
-    @messages.game_over(@game.secret_code, statistics)
+  def guess_result
+    valid_input = input_handle
+    if valid_boolean(valid_input)
+      valid_input
+    else
+      @game.compare(valid_input)
+    end
+  end
+
+  private
+
+  def valid_boolean(valid_input)
+    valid_input.class == Integer || valid_input == USER_ANSWER[:no_hints] || valid_input.nil?
   end
 
   def statistics
-    attempts_used = @difficulty[:difficulty][:attempts] - @current_attempt
+    attempts_used = @current_attempt - 1
     hints_used = @difficulty[:difficulty][:hints] - @current_hint
-    { "user_name": @name, "game_status": @game_status,
+    { "user_name": @name,
       "difficulty": @difficulty[:name],
-      "attempts_total": @attempts_total,
+      "attempts_total": @difficulty[:difficulty][:attempts],
       "attempts_used": attempts_used,
-      "hints_total": @hints_total,
+      "hints_total": @difficulty[:difficulty][:hints],
       "hints_used": hints_used }
   end
 
-  def console_input
-    input_handle(@messages.question { I18n.t(USER_ANSWER[:attempt]) },
-                  @current_hint)
+  def user_input
+    @messages.question { I18n.t(USER_ANSWER[:attempt]) }
   end
 
-  def input_validate?(console_response)
-    until errors_array_guess(console_response, (DIGIT..DIGIT))
-      console_response = @messages.question { I18n.t(USER_ANSWER[:attempt]) }
-     end
-    console_response
+  def input_validate(input)
+    if errors_array_guess(input, (DIGIT..DIGIT))
+      input
+    else
+      user_input
+    end
   end
 
-  def input_handle(console_response, current_hint)
-    case console_response
-    when 'hint' then check_hint(@current_hint)
+  def input_handle
+    input = user_input
+    case input
+    when 'hint'
+      case @current_hint
+      when ZERO then USER_ANSWER[:no_hints]
+      when 1..@difficulty[:difficulty][:hints].to_i then view_hint(@current_hint)
+        end
     when 'exit' then @messages.goodbye
-      else
-      input_validate?(console_response)
-      end
+    else
+      input_validate(input)
     end
+  end
 
-    def check_hint(current_hint)
-      puts I18n.t(USER_ANSWER[:no_hints]) if @current_hint.zero?
-      unless @current_hint.zero?
-      puts "you has #{current_hint} hint"
-      @current_hint-=1
-      @messages.answer_for_user(@game.view_hint)
-      console_input
-    end
+  def view_hint(current_hint)
+    current_hint -= 1
+    @current_hint = current_hint
+    @game.hint
   end
 end

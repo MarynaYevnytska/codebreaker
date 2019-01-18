@@ -1,28 +1,34 @@
-FILE_NAME_SORT = '../sorting.yml'
-
-module Storage
+module Load
   def save(object, file_path)
     File.new(file_path, 'w+') unless File.exist?(file_path)
     File.open(file_path, 'a') { |file| file.write(YAML.dump(object)) }
   end
 
-  def save_sorting(object, file_path)
-    File.new(file_path, 'w+') unless File.exist?(file_path)
-    File.open(file_path, 'w+') { |file| file.write(YAML.dump(object)) }
+  def load_statistics(file_path)
+    rating(load_documents(file_path))
   end
 
-  def load_settings(file_path)
-    save_sorting(sorted(load_to_hash(file_path)).values, FILE_NAME_SORT)
-    File.open(FILE_NAME_SORT, &:read)
-  end
-
-  def load_to_hash(file_path)
+  def load_documents(file_path)
     YAML.load_documents(File.open(file_path))
   end
 
-  def sorted(db)
-    by_attemt = db.sort_by { |game| game[:attempts_used] }
-    by_hint = by_attemt.sort_by { |game| game[:hints_used] }
-    by_hint.group_by { |game| game[:difficulty] }
+  def sorting_by_attemt(storge)
+    storge.sort_by { |game| game[:attempts_used] }
+  end
+
+  def sorting_by_hint(storge)
+    storge.sort_by { |game| game[:hints_used] }
+  end
+
+  def groupping_by_difficulty(storge)
+    storge.group_by { |game| game[:difficulty] }
+  end
+
+  def sorted(storge)
+    groupping_by_difficulty(sorting_by_hint(sorting_by_attemt(storge)))
+  end
+
+  def rating(storage)
+    sorted(storage).values.flatten
   end
 end
