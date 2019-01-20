@@ -64,10 +64,6 @@ RSpec.describe Validate do
       user_input = dummy_class.errors_array_string(min_down, name_range)
       expect(user_input).to eq(false)
     end
-    it 'when an user incorrect messeg is putted ', negative: true do
-      user_input = dummy_class.errors_array_string(min_down, name_range)
-      expect(STDOUT).to receive(:puts).with(instance_of(Array))
-    end
   end
 
   context 'when an user inputted NUMBER' do
@@ -78,10 +74,6 @@ RSpec.describe Validate do
     it 'when an user input of number is INCORRECT', negative: true do
       user_input = dummy_class.errors_array_guess(max_up,digit..digit)
       expect(user_input).to eq(false)
-    end
-    it 'when an user input of number is INCORRECT', negative: true do
-      user_input = dummy_class.errors_array_guess(max_up,digit..digit)
-      expect(STDOUT).to receive(:puts).with(instance_of(Array))
     end
   end
 

@@ -40,12 +40,12 @@ class Console
 
   def game_over(s_code, _game_statistics, game_status = 'failure')
     puts "Secret code is #{s_code.join}"
+    binding.pry
     case game_status
       when 'win' then puts I18n.t(MENU[:win])
       when 'failure' then puts I18n.t(MENU[:failure])
     end
     save?(_game_statistics)
-    first_choice
   end
 
   def goodbye
@@ -137,8 +137,9 @@ class Console
   def name
     validate_name.capitalize
   end
-  
+
   def save?(game_statistics)
     save(game_statistics, FILE_NAME_ST) if question { I18n.t(MENU[:save?]) } == MENU[:yes]
+    first_choice
   end
 end
