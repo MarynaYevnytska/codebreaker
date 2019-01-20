@@ -11,6 +11,7 @@ class Game
   def initialize(difficulty)
     @difficulty = difficulty
     @secret_code = create_secret_code
+    @hint_clone_scode = @secret_code.shuffle
   end
 
   def compare(user_input)

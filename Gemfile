@@ -6,3 +6,5 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 gemspec
 
 gem 'overcommit', '~> 0.46.0'
+
+gem "aruba-rspec", "~> 1.0"

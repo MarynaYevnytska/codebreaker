@@ -41,6 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'aruba-rspec', '~> 1.0'
   spec.add_runtime_dependency 'colorize'
   spec.add_runtime_dependency 'i18n'
 end
