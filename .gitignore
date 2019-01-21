@@ -14,5 +14,5 @@ lib/foodie.rb
 lib/foodie/version.rb
 spec/foodie_spec.rb
 .circleci/config.yml
-../stat.yml
+./stat.yml
 lib/modules/storage_constants.rb
