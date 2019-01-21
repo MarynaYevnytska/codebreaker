@@ -40,7 +40,6 @@ class Console
 
   def game_over(s_code, _game_statistics, game_status = 'failure')
     puts "Secret code is #{s_code.join}"
-    binding.pry
     case game_status
       when 'win' then puts I18n.t(MENU[:win])
       when 'failure' then puts I18n.t(MENU[:failure])
@@ -73,7 +72,7 @@ class Console
       input = question { I18n.t(MENU[:choose_the_command]) }
       case input
         when MENU[:exit] then goodbye
-        when MENU[:game_rules] then rules # binding.pry
+        when MENU[:game_rules] then rules
         when MENU[:stats] then stats
         when MENU[:game_start] then start
         else
